@@ -1,5 +1,5 @@
-#include "Book.h"
-#include "Student.h"
+#include "Book.hpp"
+#include "Student.hpp"
 
 #include <iostream>
 using namespace std;

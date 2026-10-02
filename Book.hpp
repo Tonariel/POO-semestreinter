@@ -1,5 +1,5 @@
-#ifndef STUDENT_H
-#define STUDENT_H
+#ifndef BOOK_H
+#define BOOK_H
 
 #include <string>
 
@@ -9,9 +9,9 @@ enum class Bookstatus{
 };
 
 struct Book {
-    string title;
-    string author;
+    std::string title;
+    std::string author;
     Bookstatus status = Bookstatus::Available;
-    string BorrowedBy = "";
+    std::string BorrowedBy = "";
 };
 #endif
