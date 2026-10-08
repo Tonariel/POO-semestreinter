@@ -92,6 +92,7 @@ bool Student::ReturnBook(Book& BookToReturn) {
     std::cout << Name_
               << " a rendu le livre "
               << BookToReturn.title() << std::endl;
+    cout << BookToReturn.title() <<  "status:" << BookToReturn.Status() << endl;
 
     return true;
 }
