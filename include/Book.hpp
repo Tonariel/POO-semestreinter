@@ -13,9 +13,11 @@ class Book {
     std::string author_;
     Bookstatus status = Bookstatus::Available;
     std::string borrowedBy_ = "";
+    static int totalBooks_;
 
 public:
     Book(std::string title, std::string author);
+    ~Book();
     Bookstatus Status() const;
     std::string BorrowedBy() const;
     std::string title() const;

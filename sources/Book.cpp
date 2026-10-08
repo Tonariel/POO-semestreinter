@@ -3,8 +3,13 @@
 using namespace std;
 
 Book::Book(std::string title, std::string author)
-    : title_(title), author_(author) {}
+    : title_(title), author_(author) {
+    totalBooks_++; 
+}
 
+Book::~Book() {
+    totalBooks_--;
+}
 
 Bookstatus Book::Status() const {
     return status;
