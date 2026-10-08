@@ -3,9 +3,15 @@ cmake_minimum_required(VERSION 3.10)
 # Définition du nom du projet
 project(MonProjet CXX)
 
-# Spécification de la version standard C++ (C++17 utilisé ici par défaut)
+# Spécification de la version standard C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Ajout de l'exécutable avec les fichiers sources pertinents
-add_executable(mon_programme main.cpp Student.cpp Book.cpp)
+# Récupère tous les fichiers .cpp présents dans le dossier "sources"
+file(GLOB SOURCES "sources/*.cpp")
+
+# Ajout de l'exécutable (main.cpp à la racine + tous les cpp du dossier sources)
+add_executable(POO main.cpp ${SOURCES})
+
+# Indique au compilateur où chercher les fichiers d'en-tête (.hpp)
+target_include_directories(POO PRIVATE include)
