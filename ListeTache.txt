@@ -1,0 +1,520 @@
+PLAN DE TRAVAIL DETAILLE - REMISE 2 DE POO (COURS 3)
+===================================================
+Projet : POO-semestreinter
+Depot : https://github.com/Tonariel/POO-semestreinter
+Sujet : Cycle de vie, copie et gestion manuelle de la memoire
+Reference : grille de correction communiquee par l'enseignant
+
+OBJECTIF FINAL
+--------------
+Faire evoluer le programme du cours 2 pour gerer une bibliotheque de livres
+alloues dynamiquement, des copies personnelles empruntees par les etudiants,
+et un compteur global de livres vivants. Le programme doit demontrer que tous
+les livres crees sont detruits : compteur final = 0.
+
+CONTRAINTES A RESPECTER
+----------------------
+- Utiliser new, delete et des destructeurs explicites.
+- NE PAS utiliser unique_ptr, shared_ptr ou make_unique.
+- Une seule entite est proprietaire de chaque allocation :
+    * Library possede les originaux de son catalogue.
+    * Student possede les copies personnelles qu'il emprunte.
+- Eviter les copies superficielles de classes proprietaires de Book*.
+- Livrer la structure Public/Private et un executable Windows .exe fonctionnel.
+- Faire apparaitre True/False pour chaque test requis dans main.cpp.
+- Afficher le compteur aux moments demandes, puis 0 apres destruction totale.
+
+ETAT DE DEPART (D'APRES LES FICHIERS CONSULTES SUR LA BRANCHE MAIN)
+-------------------------------------------------------------------
+- Book.hpp contient actuellement une struct Book simple, sans compteur.
+- Book.cpp est quasiment vide.
+- Student.hpp stocke les titres empruntes dans vector<string>.
+- Student.cpp gere les emprunts/retours sans creer de copie sur le tas.
+- Library.hpp et Library.cpp existent, mais sont encore a developper.
+- main.cpp contient deja 6 livres, 2 etudiants et des tests d'emprunt.
+- CMakeLists.txt construit mon_programme avec main.cpp, Student.cpp, Book.cpp.
+L'etat local peut etre different du GitHub : verifier git status avant de tirer.
+
+ORDRE RECOMMANDE
+----------------
+[ ] 1. Reorganiser les fichiers et adapter CMake
+[ ] 2. Faire evoluer Book : compteur et cycle de vie
+[ ] 3. Implementer Library : catalogue et proprietaire du tas
+[ ] 4. Gerer la copie et les deplacements de Library
+[ ] 5. Faire evoluer Student : copies personnelles et retour
+[ ] 6. Reecrire les tests dans main.cpp
+[ ] 7. Controler l'equilibre et l'absence d'erreurs memoire
+[ ] 8. Construire et verifier la remise finale .exe
+
+
+=======================================================================
+TACHE 1 - PREPARER L'ARCHITECTURE DU PROJET
+=======================================================================
+Objectif : respecter exactement l'organisation .h / .cpp du professeur.
+Criteres : section A (structure, inclusions, CMake, compilation).
+
+A FAIRE
+1. Sauvegarder l'etat du projet : git status, puis commit si necessaire.
+2. Creer deux dossiers a la racine : Public/ et Private/.
+3. Deplacer ET RENOMMER de maniere coherente :
+      Book.hpp     -> Public/Book.h
+      Student.hpp  -> Public/Student.h
+      Library.hpp  -> Public/Library.h
+      Book.cpp     -> Private/Book.cpp
+      Student.cpp  -> Private/Student.cpp
+      Library.cpp  -> Private/Library.cpp
+   Garder main.cpp et CMakeLists.txt a la racine.
+4. Mettre a jour tous les #include, par exemple #include "Book.h"
+   et #include "Student.h". Ne plus inclure les anciens .hpp.
+5. Verifier les protections contre les inclusions multiples : #ifndef,
+   #define et #endif (ou #pragma once si l'enseignant l'accepte).
+6. Adapter CMakeLists.txt pour compiler :
+      main.cpp
+      Private/Book.cpp
+      Private/Student.cpp
+      Private/Library.cpp
+   Ajouter le dossier Public aux chemins d'inclusion :
+      target_include_directories(mon_programme PRIVATE
+          ${CMAKE_CURRENT_SOURCE_DIR}/Public)
+7. Regenerer le build :
+      cmake -S . -B build
+      cmake --build build
+   A cette etape, des erreurs sont possibles si Library est encore vide ;
+   ne pas les confondre avec un probleme de chemin d'inclusion.
+
+STRUCTURE VISEE
+POO-semestreinter/
+  Public/
+    Book.h
+    Student.h
+    Library.h
+  Private/
+    Book.cpp
+    Student.cpp
+    Library.cpp
+  main.cpp
+  CMakeLists.txt
+  build/                (dossier technique de compilation, non remis)
+  build.exe             (executable Windows a produire a la tache 8)
+
+VALIDATION
+- Aucun ancien include vers Book.hpp / Student.hpp / Library.hpp.
+- CMake pointe vers tous les bons fichiers.
+- Les six fichiers demandes sont dans les bons dossiers.
+
+
+=======================================================================
+TACHE 2 - IMPLEMENTER LE COMPTEUR STATIQUE ET LE CYCLE DE VIE DE BOOK
+=======================================================================
+Objectif : compter correctement TOUS les objets Book vivants, y compris
+ceux crees par copie. Criteres : section B (21 points).
+
+FICHIERS : Public/Book.h et Private/Book.cpp
+
+A FAIRE DANS Book.h
+1. Conserver les informations metier : title, author, status et BorrowedBy.
+2. Ajouter un membre de classe static, par exemple :
+      static int AliveCount;
+   En general, garder le compteur prive pour proteger sa valeur.
+3. Declarer un constructeur explicite prenant titre et auteur.
+4. Declarer un constructeur par copie : Book(const Book& other).
+5. Declarer un destructeur : ~Book().
+6. Declarer une methode statique pour lire le compteur :
+      static int GetAliveCount();
+7. Examiner les operations d'affectation/deplacement : une affectation
+   remplace les donnees d'un objet existant, sans creer un livre vivant
+   supplementaire. Un constructeur de deplacement cree, lui, un nouvel
+   objet vivant et doit aussi incrementer le compteur s'il est permis.
+
+A FAIRE DANS Book.cpp
+1. Definir UNE SEULE FOIS le membre statique :
+      int Book::AliveCount = 0;
+2. Dans le constructeur ordinaire : initialiser les champs, augmenter
+   AliveCount, puis afficher '+ Construct [titre] (count=N)'.
+3. Dans le constructeur par copie : copier les champs du livre source,
+   augmenter AliveCount, puis afficher '+ Copy [titre] (count=N)'.
+4. Dans le destructeur : diminuer AliveCount et afficher
+   '- Destruct [titre] (count=N)'.
+5. Dans GetAliveCount() : retourner la valeur du membre statique.
+6. Si un constructeur sans argument ou par deplacement existe, appliquer
+   la meme regle de comptage : chaque nouvel objet vivant ajoute 1.
+7. Pour operator=, ne PAS incrementer le compteur : aucun nouvel objet
+   n'est construit. En cas de besoin, definir correctement ces operateurs.
+
+POINT DE VIGILANCE
+Le compteur suit les objets vivants, pas le nombre d'emprunts ni le nombre
+de pointeurs. Un new Book(source) doit declencher le constructeur par copie.
+Un delete sur ce Book doit declencher une destruction.
+
+VALIDATION
+- Avant toute creation : compteur = 0.
+- Apres creation de 6 originaux : compteur = 6.
+- Apres copie d'un de ces livres : compteur = 7.
+- Apres suppression de cette copie : compteur revient a 6.
+- Aucun decrement supplementaire ni compteur negatif.
+
+
+=======================================================================
+TACHE 3 - CREER LA CLASSE LIBRARY ET GERER LE CATALOGUE
+=======================================================================
+Objectif : une bibliotheque possede et detruit ses propres livres.
+Criteres : section C (stockage, new et delete).
+
+FICHIERS : Public/Library.h et Private/Library.cpp
+
+A FAIRE DANS Library.h
+1. Declarer la classe Library.
+2. Ajouter un membre prive du type :
+      std::vector<Book*> Catalog;
+   Chaque Book* de ce vecteur represente un livre du catalogue alloue
+   dynamiquement ET possede exclusivement par Library.
+3. Declarer une methode pour ajouter un livre (exemple d'interface) :
+      void AddBook(const std::string& title, const std::string& author);
+4. Declarer une methode pour retrouver un livre, par titre ou indice :
+      Book* FindBook(const std::string& title);
+   Le pointeur retourne est un ACCES au livre ; l'appelant ne doit pas
+   appeler delete dessus.
+5. Declarer une methode pour afficher la liste des livres et leur statut.
+6. Declarer le destructeur ~Library().
+
+A FAIRE DANS Library.cpp
+1. Dans AddBook(), construire chaque original avec new Book(...).
+2. Stocker ce pointeur dans le vecteur Catalog.
+3. Dans FindBook(), parcourir Catalog et retourner le pointeur correspondant,
+   ou nullptr si le livre n'existe pas.
+4. Dans l'affichage, ecrire titre, auteur et statut disponible/emprunte.
+5. Dans ~Library(), afficher le nombre de livres du catalogue, puis :
+      pour chaque Book* du vecteur : delete pointeur;
+   A la fin, ne pas laisser de pointeur possede non libere.
+
+POINT DE VIGILANCE
+Ne jamais enregistrer dans Catalog l'adresse d'une variable locale Book
+cree sur la pile : Library essaierait ensuite de faire delete sur une
+adresse qui ne provient pas de new. Ne jamais appeler delete deux fois
+sur la meme adresse.
+
+VALIDATION
+- Six appels a AddBook() => six objets Book vivants.
+- Les six originaux restent disponibles au depart.
+- La destruction de Library detruit exactement les six originaux.
+
+
+=======================================================================
+TACHE 4 - GERER EXPLICITEMENT LA COPIE DE LIBRARY
+=======================================================================
+Objectif : eviter la double destruction et les copies superficielles.
+Critere : section C, 'La copie de Library est geree' (6 points).
+
+FICHIERS : Public/Library.h et Private/Library.cpp
+
+PROBLEME A RESOUDRE
+Si Library contient vector<Book*> et qu'une copie automatique est faite,
+les deux Library possedent les MEMES adresses. Leurs destructeurs feront
+delete sur les memes livres : comportement indefini / plantage possible.
+
+SOLUTION RECOMMANDEE POUR UNE REMISE SOLIDE : COPIE PROFONDE
+1. Declarer Library(const Library& other).
+2. Dans ce constructeur, creer un nouveau Book pour chaque original :
+      new Book(*livreDeOther)
+   Le constructeur par copie de Book fait ainsi augmenter le compteur.
+3. Declarer Library& operator=(const Library& other).
+4. Pour l'affectation : gerer l'auto-affectation, puis remplacer proprement
+   les livres possedes sans fuite memoire. Une technique de copie temporaire
+   et echange (copy-and-swap) peut simplifier la gestion des erreurs.
+5. Prevoir les operations de deplacement ou les interdire explicitement.
+   Un deplacement valide transfere la propriete sans laisser les deux
+   Library detruire les memes adresses.
+6. Tester la copie d'une Library contenant 2 livres, puis la destruction
+   de l'originale et de la copie : chaque objet ne doit etre detruit
+   qu'une fois et le compteur doit revenir a sa valeur initiale.
+
+ALTERNATIVE
+Si la consigne exacte valide une classe non copiable, declarer les
+operations de copie '= delete'. MAIS la grille attribue 6 points a la
+gestion de la copie : la copie profonde est l'option la plus demonstrative.
+
+POINT DE VIGILANCE
+Eviter de deplacer/detruire un catalogue tant que des Student conservent
+des references vers ses originaux. Dans main(), creer Library AVANT Student,
+ainsi les etudiants seront detruits en premier a la sortie de portee.
+
+VALIDATION
+- Deux bibliotheques copiees n'ont pas les memes pointeurs Book*.
+- Detruire l'une ne provoque pas de double delete dans l'autre.
+- Le compteur inclut tous les livres de la copie et revient a l'equilibre.
+
+
+=======================================================================
+TACHE 5 - ADAPTER STUDENT AUX COPIES PERSONNELLES SUR LE TAS
+=======================================================================
+Objectif : un etudiant emprunte sa PROPRE COPIE du livre du catalogue.
+Criteres : copie personnelle, limite de cinq, retour et destruction.
+
+FICHIERS : Public/Student.h et Private/Student.cpp
+
+A FAIRE DANS Student.h
+1. Ne plus representer les emprunts par un simple vector<string> : ce
+   format ne contient aucun objet Book a detruire.
+2. Prevoir un stockage des copies Book* possedees par l'etudiant.
+   Une structure conseilee pour eviter l'ambiguite des titres :
+      Loan { Book* CatalogBook; Book* PersonalCopy; }
+   - CatalogBook : adresse non proprietaire de l'original.
+   - PersonalCopy : copie possedee par Student, a detruire avec delete.
+   Conserver les emprunts dans vector<Loan>.
+3. Garder le constructeur Student et les methodes GetInfo(),
+   BorrowBook(Book&) et ReturnBook(Book&).
+4. Ajouter ~Student() pour detruire les copies personnelles restantes.
+5. Ajouter une methode consultable pour le test de limite, par exemple :
+      bool CanBorrow() const;
+   et une methode indiquant le nombre d'emprunts (par exemple
+   GetBorrowedCount()). Garder le champ CanBorrow_ ou calculer le droit
+   d'emprunter directement avec la taille du vecteur.
+6. Comme Student possede des pointeurs, gerer egalement la copie :
+   copie profonde correctement implementee OU copie explicitement
+   interdite (= delete). Interdire aussi le deplacement si non gere.
+   La presence d'un ID_unique const impose un soin particulier pour '='.
+
+A FAIRE DANS Student.cpp - EMPRUNT
+1. Verifier que le nombre d'emprunts est strictement inferieur a cinq.
+2. Verifier que le livre du catalogue est disponible.
+3. Allouer la copie avec : new Book(BookToBorrow).
+4. Enregistrer le lien entre original et copie dans les emprunts.
+5. Marquer l'ORIGINAL du catalogue comme emprunte et preciser qui
+   l'emprunte. Avec le code actuel, BorrowedBy stocke Name_ ; conserver
+   cela si besoin, mais un identifiant unique est plus fiable.
+6. Afficher la reussite et retourner true ; en cas de refus, retourner
+   false SANS creer de Book et sans modifier le catalogue.
+
+A FAIRE DANS Student.cpp - RETOUR
+1. Rechercher l'emprunt correspondant a l'original indique (idealement
+   par adresse CatalogBook, pas seulement par titre).
+2. Si aucun emprunt correspondant : afficher un refus, retourner false.
+3. Si l'emprunt existe : delete sur la copie personnelle UNIQUEMENT.
+4. Supprimer l'entree du vecteur d'emprunts.
+5. Remettre le livre ORIGINAL en statut Available et effacer BorrowedBy.
+6. Le nombre d'emprunts peut repasser de cinq a quatre : un nouvel
+   emprunt devient possible.
+
+A FAIRE DANS Student.cpp - DESTRUCTEUR
+1. Pour chaque emprunt restant, liberer la copie via delete.
+2. Si un original doit etre remis disponible, s'assurer qu'il existe
+   encore : cela suppose que Library vive plus longtemps que Student.
+3. Ne jamais delete un Book* provenant du catalogue : il appartient
+   exclusivement a Library.
+4. Afficher les informations de Student sans modifier les objets.
+
+POINTS DE VIGILANCE
+- Le livre original reste dans Library durant tout l'emprunt.
+- La copie personnelle est une adresse differente de l'original.
+- Une creation de copie augmente le compteur ; son retour le diminue.
+- La limite s'applique au nombre de copies personnelles en cours.
+- Ne pas mettre Book par valeur dans le vecteur si le professeur attend
+  explicitement des copies allouees sur le tas.
+
+VALIDATION
+- Premier emprunt de Dune : true, +1 livre vivant.
+- Deuxieme etudiant sur Dune : false, aucun nouvel objet.
+- Cinq emprunts simultanes : autorises.
+- Sixieme emprunt : false, compteur inchange.
+- Retour valide : true et -1 livre vivant.
+- Retour d'un livre non emprunte : false, aucune suppression.
+- Un nouvel emprunt apres un retour : true.
+
+
+=======================================================================
+TACHE 6 - REALISER LE PROGRAMME DE DEMONSTRATION main.cpp
+=======================================================================
+Objectif : couvrir chaque test de la grille de l'enseignant.
+Criteres : section D (20 points).
+
+FICHIER : main.cpp
+
+SEQUENCE DETAILLEE A REALISER
+1. Afficher '=== Compteur au demarrage ===' et verifier 0.
+2. Ouvrir une portee { ... } : elle permettra de detruire les objets
+   avant d'afficher le bilan final.
+3. Creer une Library dans cette portee.
+4. Ajouter les 6 livres via AddBook() :
+   Dune / Frank Herbert
+   Fondation / Isaac Asimov
+   Le Petit Prince / Antoine de Saint-Exupery
+   1984 / George Orwell
+   Les Miserables / Victor Hugo
+   L'Etranger / Albert Camus
+5. Afficher le compteur : 6.
+6. Afficher le catalogue et les statuts disponibles.
+7. Creer deux Student APRES Library :
+   Marie Tremblay / 20240001
+   Hugo Lambert / 20240002
+8. Afficher l'etat de Dune avant emprunt : disponible.
+9. Marie emprunte Dune : True. Verifier que le compteur passe a 7,
+   que l'original est marque emprunte et que la copie a une autre adresse.
+10. Hugo essaie d'emprunter le meme Dune : False.
+11. Marie emprunte Fondation, Le Petit Prince, 1984, Les Miserables :
+    True, True, True, True (cinq livres au total).
+12. Marie essaie d'emprunter L'Etranger en sixieme : False.
+    Verifier CanBorrow() == false et que la liste contient toujours 5 livres.
+13. Marie retourne Dune : True. Verifier que l'original est disponible
+    et que la copie personnelle a ete detruite.
+14. Marie essaie de retourner Dune une seconde fois (ou un autre livre
+    jamais emprunte) : False.
+15. Marie emprunte L'Etranger apres avoir libere une place : True.
+16. Afficher l'etat final : Marie 5/5, Hugo 0/5.
+17. Fermer la portee : les Student sont detruits avant Library.
+18. Afficher le compteur APRES la portee : il doit valoir exactement 0.
+19. Afficher 'EQUILIBRE' si compteur == 0 ; sinon afficher une erreur
+    et idealement retourner un code de sortie non nul.
+
+AFFICHAGE DES RESULTATS
+- std::boolalpha imprime 'true'/'false' en minuscules.
+- Pour respecter l'exemple 'True'/'False', afficher :
+      (resultat ? "True" : "False")
+- Eviter de conclure 'True' sans verifier le retour reel de la methode.
+
+REPERES DE COMPTEUR POSSIBLES
+- Debut : 0
+- Apres ajout des 6 originaux : 6
+- Apres premier emprunt de Dune : 7
+- Apres cinq emprunts de Marie : 11 (= 6 originaux + 5 copies)
+- Apres retour de Dune : 10
+- Apres emprunt de L'Etranger : 11
+- Apres sortie de portee : 0
+Ces nombres supposent qu'aucune copie temporaire supplementaire ne reste
+vivante au moment de la mesure.
+
+VALIDATION
+- Tous les tests visibles et lisibles.
+- Tous les succes/refus correspondent a la logique attendue.
+- Aucun objet possede ne reste vivant apres la sortie de portee.
+
+
+=======================================================================
+TACHE 7 - VERIFIER LA MEMOIRE ET LE CYCLE DE VIE
+=======================================================================
+Objectif : eviter une remise penalisable par une fuite ou un double delete.
+Criteres : compteur final a 0 et absence de plantage.
+
+A FAIRE
+1. Compiler avec les avertissements : -Wall -Wextra -Wpedantic.
+2. Verifier qu'il n'y a aucune erreur, et comprendre les avertissements.
+3. Executer tous les tests de main.cpp et comparer au scenario attendu.
+4. Verifier que chaque appel a new aboutit a UN delete effectif.
+5. Verifier que Student ne detruit jamais les originaux de Library.
+6. Verifier que Library ne detruit jamais les copies personnelles.
+7. Verifier que toute copie de Library alloue de nouveaux Book distincts.
+8. Verifier qu'apres la destruction d'une copie, le compteur baisse de 1.
+9. Verifier que les refus d'emprunt ou de retour ne changent pas le compteur.
+10. Tester l'auto-affectation/copie de Library si ces operations existent.
+11. Tester la sortie de portee avec des emprunts non rendus : le
+    destructeur de Student doit liberer les copies restantes.
+12. Tester sur Linux avec AddressSanitizer si disponible, par exemple
+    dans un build separe configure avec :
+      cmake -S . -B build-asan \
+        -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer -g' \
+        -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+      cmake --build build-asan
+      ./build-asan/mon_programme
+    Les outils peuvent necessiter des paquets installes sur la machine.
+13. Si Valgrind est disponible :
+      valgrind --leak-check=full ./build/mon_programme
+    Chercher les fuites (definitely lost), acces invalides et doubles delete.
+
+ERREURS A NE PAS LAISSER
+- Double delete (deux proprietaires de la meme adresse).
+- Suppression d'une adresse d'objet local (non alloue avec new).
+- Destructeur absent pour une classe proprietaire de pointeurs.
+- Copie superficielle de Library ou Student.
+- Utilisation d'un Book* du catalogue apres destruction de Library.
+- Compteur final different de 0.
+
+VALIDATION
+- Execution normale, sans plantage.
+- Tests de refus vrais (sans effet secondaire).
+- Compteur final 0.
+- Aucun rapport d'erreur memoire pendant les essais disponibles.
+
+
+=======================================================================
+TACHE 8 - PREPARER LA REMISE FINALE ET L'EXECUTABLE .EXE
+=======================================================================
+Objectif : remettre exactement ce qui est demande par l'enseignant.
+Criteres : section A et penalites de la grille.
+
+A FAIRE
+1. Verifier la presence de tous les fichiers dans Public/ et Private/.
+2. Verifier que main.cpp et CMakeLists.txt sont a la racine.
+3. Retirer les dependances vers les anciens .hpp et tout chemin absolu.
+4. Faire une compilation Linux propre :
+      cmake -S . -B build
+      cmake --build build --clean-first
+      ./build/mon_programme
+5. Produire un VERITABLE executable Windows .exe. Un binaire Linux renomme
+   '.exe' NE fonctionne pas sous Windows.
+6. Si le compilateur croise MinGW-w64 est installe sur Linux, une piste :
+      x86_64-w64-mingw32-g++ -std=c++17 -IPublic \
+        main.cpp Private/Book.cpp Private/Student.cpp Private/Library.cpp \
+        -o build.exe
+   Verifier d'abord : command -v x86_64-w64-mingw32-g++
+   Si absent, installer/configurer l'outil avec la methode autorisee
+   sur la machine, ou compiler depuis Windows (MinGW / Visual Studio).
+7. Tester l'executable Windows sur un environnement Windows compatible.
+   Le simple fait qu'il ait l'extension .exe ne prouve pas qu'il fonctionne.
+8. S'assurer que les sorties montrent : les constructions, les copies,
+   les destructions, les refus, les retours et le compteur final a 0.
+9. Mettre build.exe a l'endroit attendu par la consigne de remise.
+10. Faire une derniere verification du depot :
+      git status
+      git diff
+    Puis committer/pousser les sources valides si le depot est utilise
+    pour la remise. Ne pas effacer ou ecraser des changements non sauvegardes.
+11. Ne pas inclure les fichiers temporaires de build si non demandes.
+    Verifier que build.exe est bien inclus dans le dossier final, car le
+    professeur indique une penalite majeure s'il manque.
+
+VALIDATION
+- Arborescence conforme a la consigne.
+- Code source compile et executable sans erreur.
+- .exe Windows reellement executable.
+- Compteur 0 dans la demonstration.
+- Les fichiers remis correspondent a la derniere version testee.
+
+
+=======================================================================
+MATRICE DE CORRESPONDANCE AVEC LA GRILLE
+=======================================================================
+Section A (20 pts) : taches 1 et 8, puis compilation de la tache 7.
+Section B (21 pts) : tache 2.
+Section C (18 pts) : taches 3 et 4.
+Section D (20 pts) : taches 5, 6 et 7.
+PENALITE MAJEURE : taches 4, 5, 7 et 8 doivent exclure double delete,
+plantage et absence d'executable.
+
+CONTROLES FINAUX - A COCHER AVANT DE RENDRE
+------------------------------------------
+[ ] La structure Public/Private est conforme.
+[ ] Les declarations et definitions sont reparties entre .h et .cpp.
+[ ] CMake compile tous les fichiers.
+[ ] Book possede un compteur statique correctement defini.
+[ ] Constructeur, constructeur par copie et destructeur affichent le compteur.
+[ ] Toutes les creations/destructions sont equilibrees.
+[ ] Library possede vector<Book*> et fait new/delete.
+[ ] La copie de Library est profonde ou explicitement geree.
+[ ] Student emprunte une copie dynamique differente de l'original.
+[ ] Student detruit toutes ses copies personnelles.
+[ ] Cinq emprunts autorises, sixieme refuse.
+[ ] Un livre deja emprunte est refuse a un autre etudiant.
+[ ] Un retour non valide est refuse sans changer l'etat.
+[ ] Un retour valide libere une place et une copie.
+[ ] Les tests affichent True/False.
+[ ] Le compteur final apres toutes les destructions vaut 0.
+[ ] Aucun plantage ni erreur memoire detectee.
+[ ] build.exe est un executable Windows verifie.
+[ ] La remise contient les fichiers demandes.
+
+NOTE DE METHODE
+---------------
+Implementer et tester une tache a la fois. Ne pas introduire toutes les
+modifications en une seule fois : les erreurs de compilation et les bugs de
+memoire seraient difficiles a localiser. La grille attribue surtout des
+points a la qualite de l'architecture, au respect de la propriete memoire
+et a la demonstration d'un compteur parfaitement equilibre.
