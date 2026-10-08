@@ -1,0 +1,5 @@
+# Paramètres et configuration Visual Studio Code
+.vscode/
+
+# Dossier de compilation et artefacts
+build/
