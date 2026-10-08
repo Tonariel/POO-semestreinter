@@ -5,10 +5,12 @@ using namespace std;
 Book::Book(std::string title, std::string author)
     : title_(title), author_(author) {
     totalBooks_++; 
+    cout << "+ Construct (count=" << totalBooks_ << endl;
 }
 
 Book::~Book() {
     totalBooks_--;
+    cout << "- Destruct (count=" << totalBooks_ << endl;
 }
 
 Bookstatus Book::Status() const {
