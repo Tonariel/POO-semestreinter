@@ -9,23 +9,26 @@
 
 class Library {
 private:
+    // La bibliotheque possede les livres du catalogue
     std::vector<Book*> Catalog;
 
+    // Supprimer les livres du catalogue
     void ClearCatalog() noexcept;
 
 public:
+    // Constructeur par defaut
     Library() = default;
-
-    // Copie
-    Library(const Library& other);
-    Library& operator=(const Library& other);
-
-    // Deplacement
-    Library(Library&& other) noexcept;
-    Library& operator=(Library&& other) noexcept;
 
     // Destructeur
     ~Library();
+
+    // Regle des cinq : copie
+    Library(const Library& other);
+    Library& operator=(const Library& other);
+
+    // Regle des cinq : deplacement
+    Library(Library&& other) noexcept;
+    Library& operator=(Library&& other) noexcept;
 
     // Gestion du catalogue
     void AddBook(const std::string& title,

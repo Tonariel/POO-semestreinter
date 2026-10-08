@@ -1,36 +1,27 @@
 
 #include "Library.hpp"
 #include <iostream>
-#include <utility>
 
 using namespace std;
 
 
-// ==================================================
-// TACHE 3 : GESTION DU CATALOGUE
-// ==================================================
+// ==========================================
+// GESTION DU CATALOGUE
+// ==========================================
 
 // Ajouter un livre dans la bibliotheque
-void Library::AddBook(const std::string& title,
-                      const std::string& author) {
+void Library::AddBook(const string& title,
+                      const string& author) {
 
-    Book* newBook = new Book(title, author);
-
-    try {
-        Catalog.push_back(newBook);
-    }
-    catch (...) {
-        delete newBook;
-        throw;
-    }
+    Catalog.reserve(Catalog.size() + 1);
+    Catalog.push_back(new Book(title, author));
 }
 
 
 // Rechercher un livre par son titre
-Book* Library::FindBook(const std::string& title) const {
+Book* Library::FindBook(const string& title) const {
 
     for (Book* book : Catalog) {
-
         if (book->title() == title) {
             return book;
         }
@@ -64,13 +55,17 @@ void Library::DisplayCatalog() const {
 }
 
 
-// Retourner le nombre de livres
-std::size_t Library::Size() const {
+// Nombre de livres dans le catalogue
+size_t Library::Size() const {
     return Catalog.size();
 }
 
 
-// Liberer la memoire du catalogue
+// ==========================================
+// DESTRUCTION DE LA BIBLIOTHEQUE
+// ==========================================
+
+// Supprimer tous les livres du catalogue
 void Library::ClearCatalog() noexcept {
 
     for (Book* book : Catalog) {
@@ -92,24 +87,21 @@ Library::~Library() {
 }
 
 
-// ==================================================
-// TACHE 4 : COPIE ET DEPLACEMENT DE LIBRARY
-// ==================================================
+// ==========================================
+// REGLE DES CINQ
+// ==========================================
 
-// Constructeur par copie : copie profonde
+// Constructeur par copie
 Library::Library(const Library& other) {
 
-    Catalog.reserve(other.Catalog.size());
+    Library temporary;
+    temporary.Catalog.reserve(other.Catalog.size());
 
-    try {
-        for (Book* book : other.Catalog) {
-            Catalog.push_back(new Book(*book));
-        }
+    for (Book* book : other.Catalog) {
+        temporary.Catalog.push_back(new Book(*book));
     }
-    catch (...) {
-        ClearCatalog();
-        throw;
-    }
+
+    Catalog.swap(temporary.Catalog);
 }
 
 
@@ -119,7 +111,6 @@ Library& Library::operator=(const Library& other) {
     if (this != &other) {
 
         Library temporary(other);
-
         Catalog.swap(temporary.Catalog);
     }
 
@@ -140,7 +131,6 @@ Library& Library::operator=(Library&& other) noexcept {
     if (this != &other) {
 
         ClearCatalog();
-
         Catalog.swap(other.Catalog);
     }
 
