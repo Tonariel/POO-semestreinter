@@ -7,11 +7,11 @@ project(MonProjet CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Récupère tous les fichiers .cpp présents dans le dossier "sources"
-file(GLOB SOURCES "sources/*.cpp")
+# Récupère tous les fichiers .cpp présents dans le dossier "private"
+file(GLOB SOURCES "private/*.cpp")
 
-# Ajout de l'exécutable (main.cpp à la racine + tous les cpp du dossier sources)
+# Ajout de l'exécutable (main.cpp à la racine + tous les cpp du dossier private)
 add_executable(POO main.cpp ${SOURCES})
 
 # Indique au compilateur où chercher les fichiers d'en-tête (.hpp)
-target_include_directories(POO PRIVATE include)
+target_include_directories(POO PRIVATE public)
