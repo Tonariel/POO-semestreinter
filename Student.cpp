@@ -1,5 +1,4 @@
 #include "Student.hpp"
-#include <iostream>
 
 using namespace std;
 
@@ -8,13 +7,13 @@ Student::Student(std::string Name, std::string Surname, std::string Id)
 
 void Student::GetInfo()const{
     std::cout <<("Recherche d'info sur ") << Name_ << ("...")
-    << ("\nName : ")<< Name_ 
+    << ("\ <<nName : ")<< Name_ 
     <<("\nSurname : ") << Surname_ 
     << ("\nId : ") << ID_unique 
     << ("\nCanBorrow : ") << (CanBorrow_ ? "Oui":"Non")
     <<("\nLivres empreintés :") << std::endl; 
     for (size_t i = 0 ; i < BorrowedBooks.size(); i++){
-        std::cout << BorrowedBooks[i] << std::endl;
+        std::cout << BorrowedBooks[i] std::endl;
     }
 }
 
@@ -61,4 +60,4 @@ bool Student::ReturnBook(Book& BookToReturn){
         std::cout << Name_ <<(" a rendu le livre ")<< BookToReturn.title << std::endl;
         return true;
     }
-};
+

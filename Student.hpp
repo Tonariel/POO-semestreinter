@@ -1,3 +1,4 @@
+
 #ifndef STUDENT_H
 #define STUDENT_H
 
@@ -12,16 +13,15 @@ class Student {
     const std::string ID_unique;
     std::vector<std::string> BorrowedBooks;
     bool CanBorrow_ = true;
-    
+
 public:
-    Student(std::string Name, std::string Surname, std::string Id)
-        : Name_{Name}, Surname_{Surname}, ID_unique(Id)
+    Student(std::string Name, std::string Surname, std::string Id);
 
+    void GetInfo() const;
 
-    void GetInfo()
-    
-    bool BorrowBook(Book& BookToBorrow)
+    bool BorrowBook(Book& BookToBorrow);
 
-    bool ReturnBook(Book& BookToReturn)
+    bool ReturnBook(Book& BookToReturn);
 };
+
 #endif
