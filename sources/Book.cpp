@@ -2,15 +2,15 @@
 
 using namespace std;
 
+int Book::totalBooks_ = 0;
+
 Book::Book(std::string title, std::string author)
     : title_(title), author_(author) {
-    totalBooks_++; 
-    cout << "+ Construct (count=" << totalBooks_ << endl;
+    totalBooks_++;
 }
 
 Book::~Book() {
     totalBooks_--;
-    cout << "- Destruct (count=" << totalBooks_ << endl;
 }
 
 Bookstatus Book::Status() const {
@@ -31,4 +31,8 @@ void Book::setStatus(Bookstatus newStatus) {
 
 void Book::setBorrowedBy(const std::string& newBorrower) {
     borrowedBy_ = newBorrower;
+}
+
+int Book::totalBooks() {
+    return totalBooks_;
 }

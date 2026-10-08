@@ -24,6 +24,7 @@ public:
     std::string title() const;
     void setStatus(Bookstatus newStatus);
     void setBorrowedBy(const std::string& newBorrower);
+    static int totalBooks();
 };
 
 
