@@ -42,7 +42,7 @@ int main(){
     s1.BorrowBook(b6);
 
     cout << "\n=== Retours ===" << endl;
-    ~book b1_copy;
+    ~Book b1_copy;
     s1.ReturnBook(b1);
     s2.ReturnBook(b1);
     s2.BorrowBook(b1);

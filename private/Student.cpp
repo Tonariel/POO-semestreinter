@@ -38,16 +38,18 @@ bool Student::BorrowBook(Book& BookToBorrow) {
                   << ", le livre est deja emprunte par "
                   << BookToBorrow.BorrowedBy() << std::endl;
         return false;
+
     }
 
-    BorrowedBooks.push_back(BookToBorrow.title());
-
-    BookToBorrow.setStatus(Bookstatus::Borrowed);
     BookToBorrow.setBorrowedBy(Name_);
+    BookToBorrow.setStatus(Bookstatus::Borrowed);
+    Book CopiedBook = BookToBorrow;
+    BorrowedBooks.push_back(CopiedBook.title());
+
 
     std::cout << Name_
               << " a emprunte le livre "
-              << BookToBorrow.title() << std::endl;
+              << CopiedBook.title() << std::endl;
 
     if (BorrowedBooks.size() >= 5) {
         CanBorrow_ = false;
