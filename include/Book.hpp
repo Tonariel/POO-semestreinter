@@ -22,6 +22,7 @@ public:
     Bookstatus Status() const;
     std::string BorrowedBy() const;
     std::string title() const;
+    std::string author() const;
     void setStatus(Bookstatus newStatus);
     void setBorrowedBy(const std::string& newBorrower);
     static int totalBooks();

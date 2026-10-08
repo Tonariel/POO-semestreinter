@@ -33,6 +33,10 @@ string Book::title() const {
     return title_;
 }
 
+std::string Book::author() const {
+    return author_;
+}
+
 void Book::setStatus(Bookstatus newStatus) {
     status = newStatus;
 }
