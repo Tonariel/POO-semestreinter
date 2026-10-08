@@ -11,7 +11,7 @@ class Student {
     std::string Name_;
     std::string Surname_;
     const std::string ID_unique;
-    std::vector<std::string> BorrowedBooks;
+    std::vector<Book*> BorrowedBooks;
     bool CanBorrow_ = true;
 
 public:
