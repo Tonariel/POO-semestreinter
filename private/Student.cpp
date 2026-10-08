@@ -1,7 +1,5 @@
 
 #include "Student.hpp"
-#include <algorithm>
-
 using namespace std;
 
 Student::Student(std::string Name, std::string Surname, std::string Id)
@@ -17,7 +15,7 @@ void Student::GetInfo() const {
               << "\nLivres empruntes :" << std::endl;
 
     for (size_t i = 0; i < BorrowedBooks.size(); i++) {
-        std::cout << BorrowedBooks[i] << std::endl;
+        std::cout << BorrowedBooks[i]->title() << std::endl;
     }
 }
 
@@ -43,13 +41,12 @@ bool Student::BorrowBook(Book& BookToBorrow) {
 
     BookToBorrow.setBorrowedBy(Name_);
     BookToBorrow.setStatus(Bookstatus::Borrowed);
-    Book CopiedBook = BookToBorrow;
-    BorrowedBooks.push_back(CopiedBook.title());
+    BorrowedBooks.push_back(&BookToBorrow);
 
 
     std::cout << Name_
               << " a emprunte le livre "
-              << CopiedBook.title() << std::endl;
+              << BookToBorrow.title() << std::endl;
 
     if (BorrowedBooks.size() >= 5) {
         CanBorrow_ = false;
@@ -64,13 +61,13 @@ bool Student::BorrowBook(Book& BookToBorrow) {
 
 bool Student::ReturnBook(Book& BookToReturn) {
 
-    auto it = std::find(
-        BorrowedBooks.begin(),
-        BorrowedBooks.end(),
-        BookToReturn.title()
-    );
+    size_t bookIndex = 0;
+    while (bookIndex < BorrowedBooks.size() &&
+            BorrowedBooks[bookIndex] != &BookToReturn) {
+        bookIndex++;
+    }
 
-    if (it == BorrowedBooks.end() ||
+    if (bookIndex == BorrowedBooks.size() ||
         BookToReturn.Status() != Bookstatus::Borrowed ||
         BookToReturn.BorrowedBy() != Name_) {
 
@@ -82,7 +79,7 @@ bool Student::ReturnBook(Book& BookToReturn) {
         return false;
     }
 
-    BorrowedBooks.erase(it);
+    BorrowedBooks.erase(BorrowedBooks.begin() + bookIndex);
 
     BookToReturn.setStatus(Bookstatus::Available);
     BookToReturn.setBorrowedBy("");
@@ -94,7 +91,11 @@ bool Student::ReturnBook(Book& BookToReturn) {
     std::cout << Name_
               << " a rendu le livre "
               << BookToReturn.title() << std::endl;
-    cout << BookToReturn.title() <<  "status:" << BookToReturn.Status() << endl;
+        cout << BookToReturn.title() << " status: "
+         << (BookToReturn.Status() == Bookstatus::Available
+             ? "Disponible"
+             : "Emprunte")
+         << endl;
 
     return true;
 }
