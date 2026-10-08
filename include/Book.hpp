@@ -19,6 +19,7 @@ class Book {
 public:
     Book(std::string title, std::string author);
     ~Book();
+    Book(const Book& other);
     Bookstatus Status() const;
     std::string BorrowedBy() const;
     std::string title() const;
