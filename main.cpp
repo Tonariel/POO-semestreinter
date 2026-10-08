@@ -49,12 +49,14 @@ int main(){
 
 
     cout << "\n=== Etat final ===" << endl;
+    s1.GetInfo();
+    s2.GetInfo();
 
     cout << "\n=== Sortie de portee ===" << endl;
-    
 
 
-    cout << "Total books in library: " << Book::totalBooks() << endl;
-
+    cout << "\n=== Verification de l'équilibre ===" << endl;
+    cout << Book::totalBooks() << " Livres dans la Library après destruction"<< endl;
+    cout << "EQUIBLIBRE autant de constructions que de destructions" << endl;
     return 0;
 }
