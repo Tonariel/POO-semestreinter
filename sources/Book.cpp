@@ -14,7 +14,6 @@ string Book::BorrowedBy(){
     return BorrowedBy;
 }
 
-
 string Book::title(){
     return title;
 }
