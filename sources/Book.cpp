@@ -13,7 +13,7 @@ Book::Book(std::string title, std::string author)
 Book::Book(const Book& other)
     : title_(other.title_), author_(other.author_), status(other.status), borrowedBy_(other.borrowedBy_) {
     totalBooks_++;
-    cout << "+ Construct " << title_ << " (count=" << totalBooks_ << ")" << endl;
+    cout << "+ Copy " << title_ << " (count=" << totalBooks_ << ")" << endl;
 }
 
 Book::~Book() {
