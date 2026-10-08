@@ -1,7 +1,6 @@
 
 #include "Library.hpp"
 #include <iostream>
-#include <utility>
 
 using namespace std;
 
@@ -25,10 +24,9 @@ Book* Library::AddBook(const std::string &title,
 
 
 // Rechercher un livre par son titre
-Book* Library::FindBook(const std::string& title) const {
+Book* Library::FindBook(const string& title) const {
 
     for (Book* book : Catalog) {
-
         if (book->title() == title) {
             return book;
         }
@@ -62,13 +60,17 @@ void Library::DisplayCatalog() const {
 }
 
 
-// Retourner le nombre de livres
-std::size_t Library::Size() const {
+// Nombre de livres dans le catalogue
+size_t Library::Size() const {
     return Catalog.size();
 }
 
 
-// Liberer la memoire du catalogue
+// ==========================================
+// DESTRUCTION DE LA BIBLIOTHEQUE
+// ==========================================
+
+// Supprimer tous les livres du catalogue
 void Library::ClearCatalog() noexcept {
 
     for (Book* book : Catalog) {
@@ -91,20 +93,17 @@ Library::~Library() {
 
 
 
-// Constructeur par copie : copie profonde
+// Constructeur par copie
 Library::Library(const Library& other) {
 
-    Catalog.reserve(other.Catalog.size());
+    Library temporary;
+    temporary.Catalog.reserve(other.Catalog.size());
 
-    try {
-        for (Book* book : other.Catalog) {
-            Catalog.push_back(new Book(*book));
-        }
+    for (Book* book : other.Catalog) {
+        temporary.Catalog.push_back(new Book(*book));
     }
-    catch (...) {
-        ClearCatalog();
-        throw;
-    }
+
+    Catalog.swap(temporary.Catalog);
 }
 
 
@@ -114,7 +113,6 @@ Library& Library::operator=(const Library& other) {
     if (this != &other) {
 
         Library temporary(other);
-
         Catalog.swap(temporary.Catalog);
     }
 
@@ -135,7 +133,6 @@ Library& Library::operator=(Library&& other) noexcept {
     if (this != &other) {
 
         ClearCatalog();
-
         Catalog.swap(other.Catalog);
     }
 
