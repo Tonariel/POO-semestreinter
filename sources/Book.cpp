@@ -10,6 +10,12 @@ Book::Book(std::string title, std::string author)
     cout << "+ Construct " << title_ << " (count=" << totalBooks_ << ")" << endl;
 }
 
+Book::Book(const Book& other){
+    title_ = other.title_, author_ = other.author_;
+    totalBooks_++;
+    cout << "+ Construct " << title_ << " (count=" << totalBooks_ << ")" << endl;
+}
+
 Book::~Book() {
     totalBooks_--;
     cout << "- Destruct " << title_ << " (count=" << totalBooks_ << ")" << endl;
