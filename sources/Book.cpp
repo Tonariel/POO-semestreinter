@@ -3,17 +3,25 @@
 using namespace std;
 
 Book::Book(std::string title, std::string author)
-    : title(title), author(author) {}
+    : title_(title), author_(author) {}
 
 
-Bookstatus Book::Status(){
+Bookstatus Book::Status() const {
     return status;
 }
 
-string Book::BorrowedBy(){
-    return BorrowedBy;
+string Book::BorrowedBy() const {
+    return borrowedBy_;
 }
 
-string Book::title(){
-    return title;
+string Book::title() const {
+    return title_;
+}
+
+void Book::setStatus(Bookstatus newStatus) {
+    status = newStatus;
+}
+
+void Book::setBorrowedBy(const std::string& newBorrower) {
+    borrowedBy_ = newBorrower;
 }

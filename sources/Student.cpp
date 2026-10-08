@@ -27,27 +27,27 @@ bool Student::BorrowBook(Book& BookToBorrow) {
     if (CanBorrow_ == false) {
         std::cout << Name_
                   << " a atteint sa limite de livres, impossible d'emprunter "
-                  << BookToBorrow.title << std::endl;
+                  << BookToBorrow.title() << std::endl;
         return false;
     }
 
-    if (BookToBorrow.status == Bookstatus::Borrowed) {
+    if (BookToBorrow.Status() == Bookstatus::Borrowed) {
         std::cout << Name_
                   << " ne peut pas emprunter le livre "
-                  << BookToBorrow.title
+                  << BookToBorrow.title()
                   << ", le livre est deja emprunte par "
-                  << BookToBorrow.BorrowedBy << std::endl;
+                  << BookToBorrow.BorrowedBy() << std::endl;
         return false;
     }
 
-    BorrowedBooks.push_back(BookToBorrow.title);
+    BorrowedBooks.push_back(BookToBorrow.title());
 
-    BookToBorrow.status = Bookstatus::Borrowed;
-    BookToBorrow.BorrowedBy = Name_;
+    BookToBorrow.setStatus(Bookstatus::Borrowed);
+    BookToBorrow.setBorrowedBy(Name_);
 
     std::cout << Name_
               << " a emprunte le livre "
-              << BookToBorrow.title << std::endl;
+              << BookToBorrow.title() << std::endl;
 
     if (BorrowedBooks.size() >= 5) {
         CanBorrow_ = false;
@@ -65,16 +65,16 @@ bool Student::ReturnBook(Book& BookToReturn) {
     auto it = std::find(
         BorrowedBooks.begin(),
         BorrowedBooks.end(),
-        BookToReturn.title
+        BookToReturn.title()
     );
 
     if (it == BorrowedBooks.end() ||
-        BookToReturn.status != Bookstatus::Borrowed ||
-        BookToReturn.BorrowedBy != Name_) {
+        BookToReturn.Status() != Bookstatus::Borrowed ||
+        BookToReturn.BorrowedBy() != Name_) {
 
         std::cout << Name_
                   << " ne peut pas rendre le livre "
-                  << BookToReturn.title
+                  << BookToReturn.title()
                   << " car il ne l'a pas emprunte."
                   << std::endl;
         return false;
@@ -82,8 +82,8 @@ bool Student::ReturnBook(Book& BookToReturn) {
 
     BorrowedBooks.erase(it);
 
-    BookToReturn.status = Bookstatus::Available;
-    BookToReturn.BorrowedBy = "";
+    BookToReturn.setStatus(Bookstatus::Available);
+    BookToReturn.setBorrowedBy("");
 
     if (BorrowedBooks.size() < 5) {
         CanBorrow_ = true;
@@ -91,7 +91,7 @@ bool Student::ReturnBook(Book& BookToReturn) {
 
     std::cout << Name_
               << " a rendu le livre "
-              << BookToReturn.title << std::endl;
+              << BookToReturn.title() << std::endl;
 
     return true;
 }

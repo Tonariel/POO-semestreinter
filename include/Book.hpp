@@ -9,16 +9,18 @@ enum class Bookstatus{
 };
 
 class Book {
-    std::string title;
-    std::string author;
+    std::string title_;
+    std::string author_;
     Bookstatus status = Bookstatus::Available;
-    std::string BorrowedBy = "";
+    std::string borrowedBy_ = "";
 
 public:
     Book(std::string title, std::string author);
-    Bookstatus Status();
-    std::string BorrowedBy();
-    std::string title();
+    Bookstatus Status() const;
+    std::string BorrowedBy() const;
+    std::string title() const;
+    void setStatus(Bookstatus newStatus);
+    void setBorrowedBy(const std::string& newBorrower);
 };
 
 
