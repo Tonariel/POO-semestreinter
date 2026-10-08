@@ -28,5 +28,7 @@ int main(){
     s1.BorrowBook(b1);
     s1.GetInfo();
 
+    cout << "Total books in library: " << Book::totalBooks() << endl;
+
     return 0;
 }
