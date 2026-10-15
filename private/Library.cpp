@@ -5,16 +5,21 @@
 using namespace std;
 
 
-// ==========================================
-// GESTION DU CATALOGUE
-// ==========================================
 
 // Ajouter un livre dans la bibliotheque
-void Library::AddBook(const string& title,
-                      const string& author) {
+Book* Library::AddBook(const std::string &title,
+                      const std::string &author) {
 
-    Catalog.reserve(Catalog.size() + 1);
-    Catalog.push_back(new Book(title, author));
+    Book* newBook = new Book(title, author);
+
+    try {
+        Catalog.push_back(newBook);
+    }
+    catch (...) {
+        delete newBook;
+        throw;
+    }
+    return newBook;
 }
 
 
@@ -87,9 +92,6 @@ Library::~Library() {
 }
 
 
-// ==========================================
-// REGLE DES CINQ
-// ==========================================
 
 // Constructeur par copie
 Library::Library(const Library& other) {
