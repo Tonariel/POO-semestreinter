@@ -6,13 +6,10 @@
 using namespace std;
 
 
-// ==================================================
-// TACHE 3 : GESTION DU CATALOGUE
-// ==================================================
 
 // Ajouter un livre dans la bibliotheque
-void Library::AddBook(const std::string& title,
-                      const std::string& author) {
+Book* Library::AddBook(const std::string &title,
+                      const std::string &author) {
 
     Book* newBook = new Book(title, author);
 
@@ -23,6 +20,7 @@ void Library::AddBook(const std::string& title,
         delete newBook;
         throw;
     }
+    return newBook;
 }
 
 
@@ -92,9 +90,6 @@ Library::~Library() {
 }
 
 
-// ==================================================
-// TACHE 4 : COPIE ET DEPLACEMENT DE LIBRARY
-// ==================================================
 
 // Constructeur par copie : copie profonde
 Library::Library(const Library& other) {

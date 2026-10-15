@@ -28,7 +28,7 @@ public:
     ~Library();
 
     // Gestion du catalogue
-    void AddBook(const std::string& title,
+    Book* AddBook(const std::string& title,
                  const std::string& author);
 
     Book* FindBook(const std::string& title) const;
