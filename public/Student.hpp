@@ -11,11 +11,13 @@ class Student {
     std::string Name_;
     std::string Surname_;
     const std::string ID_unique;
-    std::vector<std::string> BorrowedBooks;
+    std::vector<Book*> BorrowedBooks;
     bool CanBorrow_ = true;
 
 public:
     Student(std::string Name, std::string Surname, std::string Id);
+
+    ~Student();
 
     void GetInfo() const;
 

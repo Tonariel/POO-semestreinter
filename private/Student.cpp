@@ -1,11 +1,18 @@
 
 #include "Student.hpp"
-#include <algorithm>
-
 using namespace std;
 
 Student::Student(std::string Name, std::string Surname, std::string Id)
     : Name_{Name}, Surname_{Surname}, ID_unique(Id) {}
+
+
+
+Student::~Student(){
+    for (size_t i = 0 ; i < BorrowedBooks.size(); i++){
+        delete BorrowedBooks[i];
+    }
+    BorrowedBooks.clear();
+}
 
 
 void Student::GetInfo() const {
@@ -17,7 +24,7 @@ void Student::GetInfo() const {
               << "\nLivres empruntes :" << std::endl;
 
     for (size_t i = 0; i < BorrowedBooks.size(); i++) {
-        std::cout << BorrowedBooks[i] << std::endl;
+        std::cout << BorrowedBooks[i]->title() << std::endl;
     }
 }
 
@@ -38,16 +45,18 @@ bool Student::BorrowBook(Book& BookToBorrow) {
                   << ", le livre est deja emprunte par "
                   << BookToBorrow.BorrowedBy() << std::endl;
         return false;
+
     }
 
-    BorrowedBooks.push_back(BookToBorrow.title());
-
-    BookToBorrow.setStatus(Bookstatus::Borrowed);
     BookToBorrow.setBorrowedBy(Name_);
+    BookToBorrow.setStatus(Bookstatus::Borrowed);
+    Book* PersoCopy = new Book(BookToBorrow);
+    BorrowedBooks.push_back(PersoCopy);
 
-    std::cout << Name_
+
+    cout << Name_
               << " a emprunte le livre "
-              << BookToBorrow.title() << std::endl;
+              << PersoCopy->title() << endl;
 
     if (BorrowedBooks.size() >= 5) {
         CanBorrow_ = false;
@@ -62,13 +71,14 @@ bool Student::BorrowBook(Book& BookToBorrow) {
 
 bool Student::ReturnBook(Book& BookToReturn) {
 
-    auto it = std::find(
-        BorrowedBooks.begin(),
-        BorrowedBooks.end(),
-        BookToReturn.title()
-    );
+    size_t bookIndex = 0;
+    while (bookIndex < BorrowedBooks.size() &&
+            (BorrowedBooks[bookIndex]->title() != BookToReturn.title()
+            || BorrowedBooks[bookIndex]->author() != BookToReturn.author())){
+        bookIndex++;
+    }
 
-    if (it == BorrowedBooks.end() ||
+    if (bookIndex == BorrowedBooks.size() ||
         BookToReturn.Status() != Bookstatus::Borrowed ||
         BookToReturn.BorrowedBy() != Name_) {
 
@@ -79,8 +89,9 @@ bool Student::ReturnBook(Book& BookToReturn) {
                   << std::endl;
         return false;
     }
-
-    BorrowedBooks.erase(it);
+    Book* PersoCopy = BorrowedBooks[bookIndex];
+    delete PersoCopy;
+    BorrowedBooks.erase(BorrowedBooks.begin() + bookIndex);
 
     BookToReturn.setStatus(Bookstatus::Available);
     BookToReturn.setBorrowedBy("");
@@ -92,6 +103,11 @@ bool Student::ReturnBook(Book& BookToReturn) {
     std::cout << Name_
               << " a rendu le livre "
               << BookToReturn.title() << std::endl;
+        cout << BookToReturn.title() << " status: "
+         << (BookToReturn.Status() == Bookstatus::Available
+             ? "Disponible"
+             : "Emprunte")
+         << endl;
 
     return true;
 }
