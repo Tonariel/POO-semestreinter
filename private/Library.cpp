@@ -66,9 +66,6 @@ size_t Library::Size() const {
 }
 
 
-// ==========================================
-// DESTRUCTION DE LA BIBLIOTHEQUE
-// ==========================================
 
 // Supprimer tous les livres du catalogue
 void Library::ClearCatalog() noexcept {
