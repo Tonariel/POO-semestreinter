@@ -1,7 +1,7 @@
 
 #include <iostream>
-#include "Members/StudentMember.h"
-#include "Members/TeacherMember.h"
+#include "Members/StudentMember.hpp"
+#include "Members/TeacherMember.hpp"
 
 int main()
 {

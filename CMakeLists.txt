@@ -1,17 +1,30 @@
+
 cmake_minimum_required(VERSION 3.10)
 
-# Définition du nom du projet
 project(MonProjet CXX)
 
-# Spécification de la version standard C++
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Récupère tous les fichiers .cpp présents dans le dossier "private"
-file(GLOB SOURCES "private/*.cpp")
+# Fichiers sources existants
+file(GLOB SOURCES
+    "private/*.cpp"
+)
 
-# Ajout de l'exécutable (main.cpp à la racine + tous les cpp du dossier private)
-add_executable(POO main.cpp ${SOURCES})
+# Nouvelles classes Member
+file(GLOB MEMBER_SOURCES
+    "sources/Members/*.cpp"
+)
 
-# Indique au compilateur où chercher les fichiers d'en-tête (.hpp)
-target_include_directories(POO PRIVATE public)
+# Construction du programme
+add_executable(POO
+    main.cpp
+    ${SOURCES}
+    ${MEMBER_SOURCES}
+)
+
+# Dossiers contenant les fichiers .hpp
+target_include_directories(POO PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/public"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
