@@ -35,12 +35,20 @@ Member::~Member()
               << std::endl;
 }
 
-// Afficher les informations du membre
+
 void Member::GetInfo() const
 {
-    std::cout << "Nom : " << Name_ << std::endl;
-    std::cout << "Prenom : " << Surname_ << std::endl;
-    std::cout << "Identifiant : " << ID_unique << std::endl;
+    std::cout << "Type : "
+              << GetMemberType() << std::endl;
+
+    std::cout << "Nom : "
+              << Name_ << std::endl;
+
+    std::cout << "Prenom : "
+              << Surname_ << std::endl;
+
+    std::cout << "Identifiant : "
+              << ID_unique << std::endl;
 
     std::cout << "Emprunts : "
               << GetBorrowedCount()

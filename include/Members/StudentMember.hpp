@@ -12,10 +12,15 @@ public:
     {
     }
 
+    // Limite d'emprunt d'un etudiant
     std::size_t GetBorrowLimit() const override {
         return 2;
+    }
+
+    // Identification du type de membre
+    std::string GetMemberType() const override {
+        return "Etudiant";
     }
 };
 
 #endif
-  

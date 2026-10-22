@@ -47,6 +47,9 @@ public:
     // Limite definie par chaque classe fille
     virtual std::size_t GetBorrowLimit() const = 0;
 
+    // Type du membre défini par chaque classe fille
+    virtual std::string GetMemberType() const = 0;
+
     static int TotalMembers();
 };
 
