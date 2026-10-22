@@ -2,4 +2,4 @@
 .vscode/
 
 # Dossier de compilation et artefacts
-build/
+Build/
