@@ -1,9 +1,10 @@
-
 #include "Members/Member.hpp"
 #include "Book.hpp"
 
 #include <iostream>
 #include <utility>
+
+int Member::totalMembers_ = 0;
 
 // Constructeur
 Member::Member(std::string Name,

@@ -1,4 +1,3 @@
-
 #ifndef MEMBER_H
 #define MEMBER_H
 
@@ -16,6 +15,8 @@ private:
 
     // Copies personnelles des livres empruntes
     std::vector<Book*> BorrowedBooks;
+
+    static int totalMembers_;
 
 public:
     // Constructeur
@@ -45,6 +46,8 @@ public:
 
     // Limite definie par chaque classe fille
     virtual std::size_t GetBorrowLimit() const = 0;
+
+    static int TotalMembers();
 };
 
 #endif

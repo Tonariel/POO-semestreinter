@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
