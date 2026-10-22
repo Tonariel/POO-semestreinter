@@ -1,5 +1,8 @@
 
 #include <iostream>
+#include <memory>
+
+#include "Catalog.hpp"
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
 
@@ -9,21 +12,28 @@ int main()
               << Member::TotalMembers() << std::endl;
 
     {
-        StudentMember student("Jean", "Dupont", "E001");
-        TeacherMember teacher("Paul", "Martin", "P001");
+        Catalog<Member> members;
 
-        Member* members[] = { &student, &teacher };
+        members.Add(
+            std::make_unique<StudentMember>(
+                "Jean", "Dupont", "E001")
+        );
 
-        for (Member* member : members) {
-            member->GetInfo();
+        members.Add(
+            std::make_unique<TeacherMember>(
+                "Paul", "Martin", "P001")
+        );
 
-            std::cout << "Peut emprunter : "
-                      << member->CanBorrow()
-                      << std::endl;
+        std::cout << "Nombre de membres : "
+                  << members.Size() << std::endl;
+
+        for (std::size_t i = 0; i < members.Size(); i++) {
+            Member* member = members.Get(i);
+
+            if (member != nullptr) {
+                member->GetInfo();
+            }
         }
-
-        std::cout << "Membres pendant le test : "
-                  << Member::TotalMembers() << std::endl;
     }
 
     std::cout << "Membres apres destruction : "
