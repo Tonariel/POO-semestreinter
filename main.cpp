@@ -1,31 +1,43 @@
-#include "Book.hpp"
-#include "Student.hpp"
-#include "Library.hpp"
 
 #include <iostream>
-using namespace std;
+#include <memory>
 
-int main(){
-    cout << "=== compteur au démarage ===" << endl;
-    cout << Book::totalBooks() << " Livres dans la Library"<< endl;
+#include "Catalog.hpp"
+#include "Members/StudentMember.hpp"
+#include "Members/TeacherMember.hpp"
 
-    Library* MyLib = new Library();
-    cout << "\n=== Remplissage de la bibliothèque ===" << endl;
-    Book* b1 = MyLib->AddBook("Dune", "Frank Herbert");
-    Book* b2 = MyLib->AddBook("Fondation", "Isaac Asimov");
-    Book* b3 = MyLib->AddBook("Le Petit Prince", "Antoine de Saint-Exupéry");
-    Book* b4 = MyLib->AddBook("1984", "George Orwell");
-    Book* b5 = MyLib->AddBook("Les Misérables", "Victor Hugo");
-    Book* b6 = MyLib->AddBook("L'Étranger", "Albert Camus");
+int main()
+{
+    std::cout << "Membres au depart : "
+              << Member::TotalMembers() << std::endl;
 
+    {
+        Catalog<Member> members;
 
+        members.Add(
+            std::make_unique<StudentMember>(
+                "Jean", "Dupont", "E001")
+        );
 
-    cout << "\nLivres dans la bibliothèque : " << endl;
-    MyLib->DisplayCatalog();
+        members.Add(
+            std::make_unique<TeacherMember>(
+                "Paul", "Martin", "P001")
+        );
 
+        std::cout << "Nombre de membres : "
+                  << members.Size() << std::endl;
 
-    Student* s1 = new Student("Marie","Tremblay","20240001");
-    Student* s2 = new Student("Hugo","Lambert","20240002");
+        for (std::size_t i = 0; i < members.Size(); i++) {
+            Member* member = members.Get(i);
+
+            if (member != nullptr) {
+                member->GetInfo();
+            }
+        }
+    }
+
+    std::cout << "Membres apres destruction : "
+              << Member::TotalMembers() << std::endl;
 
     cout << "\n=== Emprunts et copies ===" << endl;
     cout << "Dune avant emprunt: " << (b1->Status() == Bookstatus::Available ? "Disponible" : "Emprunte") << endl;
