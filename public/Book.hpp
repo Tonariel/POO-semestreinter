@@ -9,7 +9,14 @@ enum class Bookstatus{
     Available
 };
 
+enum class Bookstate{
+    New,
+    Good,
+    Damaged
+};
+
 class Book {
+private:
     std::string title_;
     std::string author_;
     Bookstatus status = Bookstatus::Available;
@@ -29,6 +36,38 @@ public:
     static int totalBooks();
 };
 
+
+
+class EBook : public Book{
+private:
+    std::string downloadUrl_;
+    int fileSize_;
+
+public:
+    EBook(std::string title, std::string author, std::string url, int size);
+    std::string Url() const;
+    int size() const;
+
+};
+
+class PhysicalBook : public Book{
+private:
+    std::string Localisation_;
+    Bookstate state_;
+
+public:
+    PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state);
+};
+
+class AudioBook : public Book{
+private:
+    int Duration_;
+    std::string Narator_;
+    std::string Langage_;
+
+private:
+    AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage);
+};
 
 #endif
 

@@ -48,3 +48,20 @@ void Book::setBorrowedBy(const std::string& newBorrower) {
 int Book::totalBooks() {
     return totalBooks_;
 }
+
+EBook::EBook(std::string title, std::string author, std::string url, int size)
+    :Book{title, author}, downloadUrl_{url}, fileSize_{size}{}
+
+string EBook::Url() const{
+    return downloadUrl_;
+}
+
+int EBook::size() const{
+    return fileSize_;
+}
+
+PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state)
+    :Book{title, author}, Localisation_{Localisation}, state_{state}{}
+
+AudioBook::AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage)
+    :Book{title, author}, Duration_{Duration}, Narator_{Narator}, Language_{Language}{}
