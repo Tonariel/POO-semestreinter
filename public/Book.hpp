@@ -47,7 +47,6 @@ public:
     EBook(std::string title, std::string author, std::string url, int size);
     std::string Url() const;
     int size() const;
-
 };
 
 class PhysicalBook : public Book{
@@ -57,6 +56,9 @@ private:
 
 public:
     PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state);
+    std::string Localisation() const;
+    Bookstate SetState(std::string Newstate);
+    Bookstate State() const;
 };
 
 class AudioBook : public Book{
@@ -67,6 +69,9 @@ private:
 
 private:
     AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage);
+    int Duration() const;
+    std::string Narator() const;
+    std::string Langage() const;
 };
 
 #endif

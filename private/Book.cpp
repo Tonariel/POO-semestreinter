@@ -63,5 +63,29 @@ int EBook::size() const{
 PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state)
     :Book{title, author}, Localisation_{Localisation}, state_{state}{}
 
+string PhysicalBook::Localisation() const{
+    return Localisation_;
+}
+
+Bookstate PhysicalBook::SetState(string Newstate){
+    state_ = Newstate;
+} 
+
+Bookstate PhysicalBook::State() const{
+    return state_;
+}
+
 AudioBook::AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage)
     :Book{title, author}, Duration_{Duration}, Narator_{Narator}, Language_{Language}{}
+
+int AudioBook::Duration() const{
+    return Duration_;
+}
+
+string AudioBook::Narator() const{
+    return Narator_;
+}
+
+string AudioBook::Langage() const{
+    return Langage_;
+}
