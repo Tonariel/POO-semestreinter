@@ -2,7 +2,7 @@
 #ifndef TEACHERMEMBER_H
 #define TEACHERMEMBER_H
 
-#include "Members/Member.h"
+#include "Members/Member.hpp"
 
 class TeacherMember : public Member {
 public:

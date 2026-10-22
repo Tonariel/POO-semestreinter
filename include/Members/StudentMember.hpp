@@ -1,8 +1,7 @@
-
 #ifndef STUDENTMEMBER_H
 #define STUDENTMEMBER_H
 
-#include "Members/Member.h"
+#include "Members/Member.hpp"
 
 class StudentMember : public Member {
 public:
