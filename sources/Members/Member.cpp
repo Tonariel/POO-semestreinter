@@ -14,6 +14,7 @@ Member::Member(std::string Name,
       Surname_(std::move(Surname)),
       ID_unique(std::move(Id))
 {
+    totalMembers_++;
     std::cout << "+ Construct Member : "
               << Name_ << " " << Surname_
               << std::endl;
@@ -28,7 +29,7 @@ Member::~Member()
     }
 
     BorrowedBooks.clear();
-
+    totalMembers_--;
     std::cout << "- Destruct Member : "
               << Name_ << " " << Surname_
               << std::endl;
@@ -58,4 +59,9 @@ bool Member::CanBorrow() const
 std::size_t Member::GetBorrowedCount() const
 {
     return BorrowedBooks.size();
+}
+
+int Member::TotalMembers()
+{
+    return totalMembers_;
 }
