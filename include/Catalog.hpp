@@ -1,3 +1,4 @@
+
 #ifndef CATALOG_HPP
 #define CATALOG_HPP
 
@@ -38,9 +39,23 @@ public:
         return elements_[index].get();
     }
 
+    // Recuperer un objet depuis un catalogue constant
+    const T* Get(std::size_t index) const {
+        if (index >= elements_.size()) {
+            return nullptr;
+        }
+
+        return elements_[index].get();
+    }
+
     // Nombre d'objets
     std::size_t Size() const {
         return elements_.size();
+    }
+
+    // Verifier si le catalogue est vide
+    bool Empty() const {
+        return elements_.empty();
     }
 };
 
