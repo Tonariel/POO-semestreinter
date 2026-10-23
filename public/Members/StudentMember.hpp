@@ -30,6 +30,8 @@ public:
         return "Etudiant";
     }
 
+    void GetInfo() const override;
+
     // Accesseur du programme d'etudes
     std::string GetProgramme() const {
         return programme_;
