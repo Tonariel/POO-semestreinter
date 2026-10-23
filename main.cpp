@@ -1,7 +1,7 @@
 #include <iostream>
 #include <memory>
 
-#include "Catalog.hpp"
+#include "Library.hpp"
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
 
@@ -11,31 +11,49 @@ int main()
               << Member::TotalMembers() << std::endl;
 
     {
-        Catalog<Member> members;
+        Library bibliotheque;
 
-        members.Add(
-        std::make_unique<StudentMember>(
-        "Jean", "Dupont", "E001", "Informatique")
-);
+        // Test AddMember()
+        bibliotheque.AddMember(
+            std::make_unique<StudentMember>(
+                "Jean", "Dupont", "E001", "Informatique")
+        );
 
-        members.Add(
-        std::make_unique<TeacherMember>(
-        "Paul", "Martin", "P001", "Mathematiques")
-);
-        std::cout << "Nombr>e de membres : "
-                  << members.Size() << std::endl;
+        bibliotheque.AddMember(
+            std::make_unique<TeacherMember>(
+                "Paul", "Martin", "P001", "Mathematiques")
+        );
 
-        for (std::size_t i = 0; i < members.Size(); i++) {
-            Member* member = members.Get(i);
+        // Test MemberCount()
+        std::cout << "Nombre de membres : "
+                  << bibliotheque.MemberCount()
+                  << std::endl;
 
-            if (member != nullptr) {
-                member->GetInfo();
-            }
+        // Test GetMember()
+        Member* premier = bibliotheque.GetMember(0);
+
+        if (premier != nullptr) {
+            std::cout << "Premier membre : "
+                      << premier->GetMemberType()
+                      << std::endl;
         }
+
+        // Test d'indice invalide
+        std::cout << "Indice invalide : "
+                  << (bibliotheque.GetMember(100) == nullptr)
+                  << std::endl;
+
+        // Test DisplayMembers()
+        bibliotheque.DisplayMembers();
+
+        std::cout << "Membres vivants : "
+                  << Member::TotalMembers()
+                  << std::endl;
     }
 
     std::cout << "Membres apres destruction : "
-              << Member::TotalMembers() << std::endl;
+              << Member::TotalMembers()
+              << std::endl;
 
     return 0;
 }
