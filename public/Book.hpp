@@ -27,6 +27,8 @@ public:
     Book(std::string title, std::string author);
     virtual ~Book();
     virtual void Display() const;
+    virtual Book* Clone()const ;
+    void Destroy_Clone(Book *Copy);
     Book(const Book& other);
     Bookstatus Status() const;
     std::string BorrowedBy() const;
@@ -46,7 +48,8 @@ private:
 
 public:
     EBook(std::string title, std::string author, std::string url, int size);
-    EBook(EBook &other);
+    EBook(const EBook &other);
+    EBook* Clone()const override;
     std::string Url() const;
     int size() const;
 };
@@ -58,7 +61,8 @@ private:
 
 public:
     PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state);
-    PhysicalBook(PhysicalBook &other);
+    PhysicalBook(const PhysicalBook &other);
+    PhysicalBook *Clone()const;
     std::string Localisation() const;
     Bookstate SetState(Bookstate Newstate);
     Bookstate State() const;
@@ -72,7 +76,8 @@ private:
 
 public:
     AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage);
-    AudioBook(AudioBook&other);
+    AudioBook(const AudioBook&other);
+    AudioBook* Clone ()const;
     int Duration() const;
     std::string Narator() const;
     std::string Langage() const;
