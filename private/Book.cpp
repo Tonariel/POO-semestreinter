@@ -25,6 +25,14 @@ void Book::Display() const {
     cout << "Book :" << title_;
 }
 
+Book* Book::Clone ()const {
+    return new Book(*this);
+}
+
+void Book::Destroy_Clone (Book *Copy){
+    delete Copy;
+}
+
 Bookstatus Book::Status() const {
     return status;
 }
@@ -56,8 +64,12 @@ int Book::totalBooks() {
 EBook::EBook(std::string title, std::string author, std::string url, int size)
     :Book{title, author}, downloadUrl_{url}, fileSize_{size}{}
 
-EBook::EBook(EBook &other)
+EBook::EBook(const EBook &other)
     :Book (other), downloadUrl_(other.downloadUrl_),fileSize_(other.fileSize_){}
+
+EBook* EBook::Clone()const{
+    return new EBook(*this);
+}
 
 string EBook::Url() const{
     return downloadUrl_;
@@ -71,8 +83,12 @@ int EBook::size() const{
 PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state)
     :Book{title, author}, Localisation_{Localisation}, state_{state}{}
 
-PhysicalBook::PhysicalBook(PhysicalBook &other)
+PhysicalBook::PhysicalBook(const PhysicalBook &other)
     :Book(other), Localisation_(other.Localisation_), state_(other.state_){}
+
+PhysicalBook *PhysicalBook::Clone()const{
+    return new PhysicalBook(*this);
+}
 
 string PhysicalBook::Localisation() const{
     return Localisation_;
@@ -89,8 +105,12 @@ Bookstate PhysicalBook::State() const{
 AudioBook::AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage)
     :Book{title, author}, Duration_{Duration}, Narator_{Narator}, Langage_{Langage}{}
 
-AudioBook::AudioBook(AudioBook &other)
+AudioBook::AudioBook(const AudioBook &other)
     :Book(other), Duration_(other.Duration_), Narator_(other.Narator_), Langage_(other.Langage_){}
+
+AudioBook* AudioBook::Clone()const{
+    return new AudioBook(*this);
+}
 
 int AudioBook::Duration() const{
     return Duration_;
