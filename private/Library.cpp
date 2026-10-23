@@ -123,21 +123,13 @@ std::size_t Library::MemberCount() const
     return members_.Size();
 }
 
-
-// Afficher les membres par polymorphisme
+// Afficher les informations de tous les membres
 void Library::DisplayMembers() const
 {
     cout << "\n=== Membres de la bibliotheque ==="
          << endl;
 
-    for (std::size_t i = 0; i < members_.Size(); i++) {
-        const Member* membre = members_.Get(i);
-
-        if (membre != nullptr) {
-            membre->GetInfo();
-            cout << endl;
-        }
-    }
+    DisplayGenericCatalog(members_);
 }
 
 // Destructeur
