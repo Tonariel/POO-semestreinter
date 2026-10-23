@@ -139,11 +139,6 @@ void Library::DisplayMembers() const
     }
 }
 
-
-// ==========================================
-// CYCLE DE VIE DE LIBRARY
-// ==========================================
-
 // Destructeur
 Library::~Library()
 {
@@ -184,4 +179,31 @@ Library& Library::operator=(Library&& other) noexcept
     }
 
     return *this;
+}
+
+// Recherche d'un membre par son identifiant   
+Member* Library::FindMemberById(const std::string& id)
+{
+    for (std::size_t i = 0; i < members_.Size(); i++) {
+        Member* membre = members_.Get(i);
+
+        if (membre != nullptr && membre->GetId() == id) {
+            return membre;
+        }
+    }
+
+    return nullptr;
+}
+
+const Member* Library::FindMemberById(const std::string& id) const
+{
+    for (std::size_t i = 0; i < members_.Size(); i++) {
+        const Member* membre = members_.Get(i);
+
+        if (membre != nullptr && membre->GetId() == id) {
+            return membre;
+        }
+    }
+
+    return nullptr;
 }

@@ -46,6 +46,9 @@ public:
 
     Member* GetMember(std::size_t index);
     const Member* GetMember(std::size_t index) const;
+    // Recherche d'un membre par son identifiant
+    Member* FindMemberById(const std::string& id);
+    const Member* FindMemberById(const std::string& id) const;
 
     std::size_t MemberCount() const;
 

@@ -50,6 +50,9 @@ public:
     // Type du membre défini par chaque classe fille
     virtual std::string GetMemberType() const = 0;
 
+    // Recuperer l'identifiant du membre
+    const std::string& GetId() const;
+
     static int TotalMembers();
 };
 
