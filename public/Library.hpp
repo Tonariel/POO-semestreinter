@@ -16,7 +16,7 @@ private:
     std::vector<Book*> Catalog;
 
     // Nouveau catalogue des membres
-    Catalog<Member> members_;
+   ::Catalog<Member> members_;
 
     // Liberation des livres
     void ClearCatalog() noexcept;
