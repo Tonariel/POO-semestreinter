@@ -25,7 +25,8 @@ private:
 
 public:
     Book(std::string title, std::string author);
-    ~Book();
+    virtual ~Book();
+    virtual void Display() const;
     Book(const Book& other);
     Bookstatus Status() const;
     std::string BorrowedBy() const;
@@ -45,6 +46,7 @@ private:
 
 public:
     EBook(std::string title, std::string author, std::string url, int size);
+    EBook(EBook &other);
     std::string Url() const;
     int size() const;
 };
@@ -56,8 +58,9 @@ private:
 
 public:
     PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state);
+    PhysicalBook(PhysicalBook &other);
     std::string Localisation() const;
-    Bookstate SetState(std::string Newstate);
+    Bookstate SetState(Bookstate Newstate);
     Bookstate State() const;
 };
 
@@ -67,8 +70,9 @@ private:
     std::string Narator_;
     std::string Langage_;
 
-private:
+public:
     AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage);
+    AudioBook(AudioBook&other);
     int Duration() const;
     std::string Narator() const;
     std::string Langage() const;
