@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <memory>
 
@@ -15,16 +14,15 @@ int main()
         Catalog<Member> members;
 
         members.Add(
-            std::make_unique<StudentMember>(
-                "Jean", "Dupont", "E001")
-        );
+        std::make_unique<StudentMember>(
+        "Jean", "Dupont", "E001", "Informatique")
+);
 
         members.Add(
-            std::make_unique<TeacherMember>(
-                "Paul", "Martin", "P001")
-        );
-
-        std::cout << "Nombre de membres : "
+        std::make_unique<TeacherMember>(
+        "Paul", "Martin", "P001", "Mathematiques")
+);
+        std::cout << "Nombr>e de membres : "
                   << members.Size() << std::endl;
 
         for (std::size_t i = 0; i < members.Size(); i++) {
