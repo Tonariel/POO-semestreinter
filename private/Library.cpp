@@ -82,25 +82,26 @@ void Library::ClearCatalog() noexcept
     Catalog.clear();
 }
 
-
-// ==========================================
-// GESTION DES MEMBRES
-// ==========================================
-
-// Ajouter un membre
+// Ajouter un membre dans la bibliotheque
 Member* Library::AddMember(std::unique_ptr<Member> member)
 {
+    // Refuser un pointeur nul
     if (member == nullptr) {
         return nullptr;
     }
 
+    // Refuser un identifiant deja utilise
+    if (FindMemberById(member->GetId()) != nullptr) {
+        return nullptr;
+    }
+
+    // Ajouter le membre au catalogue
     Member* nouveauMembre = member.get();
 
     members_.Add(std::move(member));
 
     return nouveauMembre;
 }
-
 
 // Recuperer un membre par son indice
 Member* Library::GetMember(std::size_t index)
