@@ -2,13 +2,21 @@
 #define STUDENTMEMBER_H
 
 #include "Members/Member.hpp"
+#include <string>
 
 class StudentMember : public Member {
+private:
+    // Programme d'etudes de l'etudiant
+    std::string programme_;
+
 public:
+    // Constructeur
     StudentMember(std::string Name,
                   std::string Surname,
-                  std::string Id)
-        : Member(Name, Surname, Id)
+                  std::string Id,
+                  std::string Programme)
+        : Member(Name, Surname, Id),
+          programme_(Programme)
     {
     }
 
@@ -20,6 +28,11 @@ public:
     // Identification du type de membre
     std::string GetMemberType() const override {
         return "Etudiant";
+    }
+
+    // Accesseur du programme d'etudes
+    std::string GetProgramme() const {
+        return programme_;
     }
 };
 
