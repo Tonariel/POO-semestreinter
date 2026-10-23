@@ -94,6 +94,29 @@ int main()
                   << bibliotheque.MemberCount()
                   << std::endl;
 
+
+        std::cout << "\n=== TEST : IDENTIFIANT EN DOUBLE ==="
+                << std::endl;
+
+        // E001 existe deja dans la bibliotheque
+        Member* doublon = bibliotheque.AddMember(
+            std::make_unique<StudentMember>(
+                "Lucas", "Bernard", "E001", "Physique")
+        );
+
+        std::cout << "Doublon refuse : "
+                << (doublon == nullptr)
+                << std::endl;
+
+        std::cout << "Nombre de membres : "
+                << bibliotheque.MemberCount()
+                << std::endl;
+
+        std::cout << "Membres vivants : "
+                << Member::TotalMembers()
+                << std::endl;
+
+
         // ==================================
         // TEST 4 : CONSTRUCTEUR DE DEPLACEMENT
         // ==================================
