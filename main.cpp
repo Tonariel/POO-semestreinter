@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -6,6 +5,11 @@
 #include "Library.hpp"
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
+
+void DisplayObject(const IDisplayable& object)
+{
+    object.GetInfo();
+}
 
 int main()
 {
@@ -33,6 +37,14 @@ int main()
             std::make_unique<TeacherMember>(
                 "Paul", "Martin", "P001", "Mathematiques")
         );
+
+        std::cout << "\n=== TEST INTERFACE ===" << std::endl;
+
+        const Member* membre = bibliotheque.GetMember(0);
+
+        if (membre != nullptr) {
+            DisplayObject(*membre);
+        }
 
         std::cout << "Nombre de membres : "
                   << bibliotheque.MemberCount()
