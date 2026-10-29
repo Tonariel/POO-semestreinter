@@ -46,11 +46,6 @@ public:
     void GetInfo() const override;
     void AddBorrowedBook(Book* book);
 
-    // Gestion des emprunts
-    bool BorrowBook(Book& BookToBorrow);
-    bool ReturnBook(Book& BookToReturn);
-
-
 
     // Verification de la capacite d'emprunt
     bool CanBorrow() const;
