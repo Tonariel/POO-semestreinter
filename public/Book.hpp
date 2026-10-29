@@ -60,7 +60,7 @@ private:
     Bookstate state_;
 
 public:
-    PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state);
+    PhysicalBook(std::string title, std::string author, std::string Localisation, Bookstate state);
     PhysicalBook(const PhysicalBook &other);
     PhysicalBook *Clone()const;
     std::string Localisation() const;
