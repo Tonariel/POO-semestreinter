@@ -60,6 +60,7 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     BooktoBorrow->status = Bookstatus::Borrowed;
     Book* Copy = BooktoBorrow->Clone();
     Membre->AddBorrowedBook(Copy);
+    return true;
 }
 
 bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
