@@ -12,14 +12,9 @@
 
 class Library {
 private:
-    // Ancien catalogue des livres (provisoire)
-    std::vector<Book*> Catalog;
+    ::Catalog<Book> books_;
+    ::Catalog<Member> members_;
 
-    // Nouveau catalogue des membres
-   ::Catalog<Member> members_;
-
-    // Liberation des livres
-    void ClearCatalog() noexcept;
 
 public:
     Library() = default;
@@ -33,9 +28,10 @@ public:
     Library(Library&& other) noexcept;
     Library& operator=(Library&& other) noexcept;
 
-    // Gestion des livres : code existant
-    Book* AddBook(const std::string& title,
-                  const std::string& author);
+    Book* AddBook(std::unique_ptr<Book> book);
+
+    Book* GetBook(std::size_t index);
+    const Book* GetBook(std::size_t index) const;
 
     Book* FindBook(const std::string& title) const;
     void DisplayCatalog() const;
