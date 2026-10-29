@@ -33,7 +33,8 @@ public:
     Book* GetBook(std::size_t index);
     const Book* GetBook(std::size_t index) const;
 
-    Book* FindBook(const std::string& title) const;
+    Book* FindBook(const std::string& title);
+    const Book* FindBook(const std::string& title) const;
     void DisplayCatalog() const;
     std::size_t Size() const;
 
