@@ -36,6 +36,7 @@ public:
     std::string title() const;
     std::string author() const;
     static bool BorrowBook (Member* Membre, Book* BooktoBorrow);
+    static bool ReturnBook (Member* Membre, Book*BooktoReturn);
     void setStatus(Bookstatus newStatus);
     void setBorrowedBy(const std::string& newBorrower);
     static int totalBooks();
