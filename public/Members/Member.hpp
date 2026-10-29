@@ -23,8 +23,6 @@ private:
         std::unique_ptr<Book> copy;
     };
 
-    std::vector<BorrowRecord> BorrowedBooks;
-
     static int totalMembers_;
 
 public:
@@ -47,6 +45,9 @@ public:
     // Gestion des emprunts
     bool BorrowBook(Book& BookToBorrow);
     bool ReturnBook(Book& BookToReturn);
+
+    std::vector<BorrowRecord> BorrowedBooks;
+
 
     // Verification de la capacite d'emprunt
     bool CanBorrow() const;
