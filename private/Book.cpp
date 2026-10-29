@@ -80,7 +80,7 @@ int EBook::size() const{
 }
 
 
-PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, std::string state)
+PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, Bookstate state)
     :Book{title, author}, Localisation_{Localisation}, state_{state}{}
 
 PhysicalBook::PhysicalBook(const PhysicalBook &other)
