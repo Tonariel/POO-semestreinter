@@ -56,6 +56,7 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if(Membre->CanBorrow() == false){
         return false;
     }
+    BooktoBorrow->status = Bookstatus::Borrowed;
     Book* Copy = BooktoBorrow->Clone();
     Membre->AddBorrowedBook(Copy);
 }
