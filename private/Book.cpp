@@ -119,7 +119,7 @@ string PhysicalBook::Localisation() const{
     return Localisation_;
 }
 
-Bookstate PhysicalBook::SetState(Bookstate Newstate){
+void PhysicalBook::SetState(Bookstate Newstate){
     state_ = Newstate;
 } 
 

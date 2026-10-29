@@ -67,7 +67,7 @@ public:
     PhysicalBook(const PhysicalBook &other);
     PhysicalBook *Clone()const;
     std::string Localisation() const;
-    Bookstate SetState(Bookstate Newstate);
+    void SetState(Bookstate Newstate);
     Bookstate State() const;
 };
 
