@@ -3,7 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <cstddef>
+
 #include "Interfaces/IDisplayable.hpp"
 
 class Book;
@@ -14,46 +16,52 @@ private:
     std::string Surname_;
     std::string ID_unique;
 
-    // Copies personnelles des livres empruntes
-    std::vector<Book*> BorrowedBooks;
+    // Un emprunt associe un livre original a sa copie personnelle.
+    // Le membre ne possede pas l'original.
+    struct BorrowRecord {
+        Book* original = nullptr;
+        std::unique_ptr<Book> copy;
+    };
+
+    std::vector<BorrowRecord> BorrowedBooks;
 
     static int totalMembers_;
 
 public:
-    // Constructeur
+    // Constructeur et destructeur
     Member(std::string Name,
            std::string Surname,
            std::string Id);
 
-    // Destructeur virtuel
     virtual ~Member();
 
-    // Interdire la copie et le deplacement
+    // Copie et deplacement interdits
     Member(const Member&) = delete;
     Member& operator=(const Member&) = delete;
     Member(Member&&) = delete;
     Member& operator=(Member&&) = delete;
 
-    // Informations du membre
+    // Affichage polymorphe
     void GetInfo() const override;
 
     // Gestion des emprunts
     bool BorrowBook(Book& BookToBorrow);
     bool ReturnBook(Book& BookToReturn);
 
-    // Verification des emprunts
+    // Verification de la capacite d'emprunt
     bool CanBorrow() const;
     std::size_t GetBorrowedCount() const;
 
-    // Limite definie par chaque classe fille
+    // Limite propre au type de membre
     virtual std::size_t GetBorrowLimit() const = 0;
 
-    // Type du membre défini par chaque classe fille
+    // Type du membre
     virtual std::string GetMemberType() const = 0;
 
-    // Recuperer l'identifiant du membre
+    // Identifiant unique
     const std::string& GetId() const;
 
+    // Compteur global
     static int TotalMembers();
 };
 
