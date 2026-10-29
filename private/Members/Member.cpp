@@ -61,7 +61,7 @@ void Member::GetInfo() const
 void Member::AddBorrowedBook(Book* book)
 {
     if (book != nullptr) {
-        BorrowedBooks.Add book;
+        BorrowedBooks.push_back(book);
     }
 }
 
@@ -74,7 +74,7 @@ bool Member::CanBorrow() const
 }
 
 // Retourne le nom du membre (pour StudentMember)
-string Member::ReturnName() const
+std::string Member::ReturnName() const
 {
     return Name_;
 }
