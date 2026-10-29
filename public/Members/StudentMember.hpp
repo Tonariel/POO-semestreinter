@@ -32,8 +32,6 @@ public:
 
     void GetInfo() const override;
 
-    std::string ReturnName() const;
-
     // Accesseur du programme d'etudes
     std::string GetProgramme() const {
         return programme_;

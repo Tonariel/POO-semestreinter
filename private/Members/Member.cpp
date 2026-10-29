@@ -72,19 +72,22 @@ void Member::GetInfo() const
 void Member::AddBorrowedBook(Book* book)
 {
     if (book != nullptr) {
-        BorrowRecord record;
-        record.original = book;
-        record.copy = std::make_unique<Book>(*book);
-
-        BorrowedBooks.push_back(std::move(record));
+        BorrowedBooks.Add book;
     }
 }
+
 
 
 //Verification de la capacite d'emprunt
 bool Member::CanBorrow() const
 {
     return GetBorrowedCount() < GetBorrowLimit();
+}
+
+// Retourne le nom du membre (pour StudentMember)
+string Member::ReturnName() const
+{
+    return Name_;
 }
 
 //Nombre de livres actuellement empruntes
@@ -106,18 +109,18 @@ int Member::TotalMembers()
 }
 
 // Recuperer un livre original a partir de son titre et de son auteur
-Book* Member::GetReleasedBook(const std::string& title, const std::string& author) {
+Book* Member::GetReleasedBook(const std::string& title, const std::string& author)
+{
     auto it = std::find_if(BorrowedBooks.begin(), BorrowedBooks.end(),
-        [&title, &author](const BorrowRecord& record) {
-            return record.original != nullptr &&
-                   record.original->title() == title &&
-                   record.original->author() == author;
-        });
+                           [&title, &author](const Book* book) {
+                               return book->title() == title && book->author() == author;
+                           });
 
     if (it != BorrowedBooks.end()) {
-        Book* releasedBook = it->original;
+        Book* originalBook = *it;
         BorrowedBooks.erase(it);
-        return releasedBook;
+        return originalBook;
     }
-    return nullptr; // Livre non trouvé
+
+    return nullptr; // Livre non trouve
 }

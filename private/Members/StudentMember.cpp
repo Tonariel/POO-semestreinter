@@ -11,8 +11,3 @@ void StudentMember::GetInfo() const
               << programme_
               << std::endl;
 }
-
-string StudentMember::ReturnName() const
-{
-    return Name_;
-}
