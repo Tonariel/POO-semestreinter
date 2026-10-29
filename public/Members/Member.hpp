@@ -25,6 +25,9 @@ private:
 
     static int totalMembers_;
 
+    std::vector<BorrowRecord> BorrowedBooks;
+
+
 public:
     // Constructeur et destructeur
     Member(std::string Name,
@@ -41,12 +44,12 @@ public:
 
     // Affichage polymorphe
     void GetInfo() const override;
+    void AddBorrowedBook(Book* book);
 
     // Gestion des emprunts
     bool BorrowBook(Book& BookToBorrow);
     bool ReturnBook(Book& BookToReturn);
 
-    std::vector<BorrowRecord> BorrowedBooks;
 
 
     // Verification de la capacite d'emprunt
