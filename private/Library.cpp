@@ -163,3 +163,35 @@ Library& Library::operator=(Library&& other) noexcept
 
     return *this;
 }
+
+// ==========================================
+// RECHERCHE DES MEMBRES PAR IDENTIFIANT
+// ==========================================
+
+// Recherche modifiable
+Member* Library::FindMemberById(const std::string& id)
+{
+    for (std::size_t i = 0; i < members_.Size(); ++i) {
+        Member* membre = members_.Get(i);
+
+        if (membre != nullptr && membre->GetId() == id) {
+            return membre;
+        }
+    }
+
+    return nullptr;
+}
+
+// Recherche en lecture seule
+const Member* Library::FindMemberById(const std::string& id) const
+{
+    for (std::size_t i = 0; i < members_.Size(); ++i) {
+        const Member* membre = members_.Get(i);
+
+        if (membre != nullptr && membre->GetId() == id) {
+            return membre;
+        }
+    }
+
+    return nullptr;
+}
