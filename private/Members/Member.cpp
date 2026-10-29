@@ -8,10 +8,7 @@
 
 int Member::totalMembers_ = 0;
 
-// ==========================================
-// CONSTRUCTEUR
-// ==========================================
-
+//Constructeur
 Member::Member(std::string Name,
                std::string Surname,
                std::string Id)
@@ -26,10 +23,7 @@ Member::Member(std::string Name,
               << std::endl;
 }
 
-// ==========================================
-// DESTRUCTEUR
-// ==========================================
-
+//Destructeur
 Member::~Member()
 {
     // Restaurer les originaux encore empruntes.
@@ -53,10 +47,7 @@ Member::~Member()
               << std::endl;
 }
 
-// ==========================================
-// AFFICHAGE DES INFORMATIONS
-// ==========================================
-
+//Affichage des informations du membre
 void Member::GetInfo() const
 {
     std::cout << "Type : "
@@ -90,44 +81,43 @@ void Member::AddBorrowedBook(Book* book)
 }
 
 
-// ==========================================
-// VERIFICATION DE LA LIMITE D'EMPRUNT
-// ==========================================
-
+//Verification de la capacite d'emprunt
 bool Member::CanBorrow() const
 {
     return GetBorrowedCount() < GetBorrowLimit();
 }
 
-// ==========================================
-// NOMBRE D'EMPRUNTS
-// ==========================================
-
+//Nombre de livres actuellement empruntes
 std::size_t Member::GetBorrowedCount() const
 {
     return BorrowedBooks.size();
 }
 
-// ==========================================
-// EMPRUNTER UN LIVRE
-// ==========================================
-
-
-
-// ==========================================
-// IDENTIFIANT DU MEMBRE
-// ==========================================
-
+//Identifiant unique du membre
 const std::string& Member::GetId() const
 {
     return ID_unique;
 }
 
-// ==========================================
-// COMPTEUR GLOBAL
-// ==========================================
-
+//Compteur global de membres
 int Member::TotalMembers()
 {
     return totalMembers_;
+}
+
+// Recuperer un livre original a partir de son titre et de son auteur
+Book* Member::GetReleasedBook(const std::string& title, const std::string& author) {
+    auto it = std::find_if(BorrowedBooks.begin(), BorrowedBooks.end(),
+        [&title, &author](const BorrowRecord& record) {
+            return record.original != nullptr &&
+                   record.original->title() == title &&
+                   record.original->author() == author;
+        });
+
+    if (it != BorrowedBooks.end()) {
+        Book* releasedBook = it->original;
+        BorrowedBooks.erase(it);
+        return releasedBook;
+    }
+    return nullptr; // Livre non trouvé
 }
