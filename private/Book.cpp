@@ -63,10 +63,14 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
 }
 
 bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
-        Book* Copy = Membre->GetRelesedBook();
+        Book* Copy = Membre->GetReleasedBook(BooktoReturn->title_, BooktoReturn->author_);
+        if (Copy == nullptr){
+            return false;
+        }
         delete Copy;
         BooktoReturn->setStatus(Bookstatus::Available);
         BooktoReturn->setBorrowedBy("");
+        return true;
 }
 
 void Book::setStatus(Bookstatus newStatus) {
