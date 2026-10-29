@@ -14,7 +14,7 @@ class Member : public IDisplayable {
 private:
     std::string Name_;
     std::string Surname_;
-    std::string ID_unique;
+    std::string ID_unique;sd
 
     static int totalMembers_;
 
@@ -38,6 +38,7 @@ public:
     // Affichage polymorphe
     void GetInfo() const override;
     void AddBorrowedBook(Book* book);
+    Book* GetReleasedBook(const std::string& title, const std::string& author);
 
 
     // Verification de la capacite d'emprunt
