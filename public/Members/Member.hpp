@@ -18,7 +18,7 @@ private:
 
     static int totalMembers_;
 
-    std::vector<BorrowRecord> BorrowedBooks;
+    std::vector<Book*> BorrowedBooks;
 
 
 public:
