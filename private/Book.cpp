@@ -57,7 +57,7 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
         return false;
     }
     Book* Copy = BooktoBorrow->Clone();
-    Membre->BorrowedBooks.add(Copy);
+    AddBorowedBook(*Copy);
 }
 
 void Book::setStatus(Bookstatus newStatus) {
