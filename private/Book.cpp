@@ -56,9 +56,17 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if(Membre->CanBorrow() == false){
         return false;
     }
+    BooktoBorrow->setBorrowedBy(Membre->ReturnName);
     BooktoBorrow->status = Bookstatus::Borrowed;
     Book* Copy = BooktoBorrow->Clone();
     Membre->AddBorrowedBook(Copy);
+}
+
+bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
+        Book* Copy = Membre->GetRelesedBook();
+        delete Copy;
+        BooktoReturn->setStatus(Bookstatus::Available);
+        BooktoReturn->setBorrowedBy("");
 }
 
 void Book::setStatus(Bookstatus newStatus) {
