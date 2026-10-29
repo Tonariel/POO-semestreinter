@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 #include <cstddef>
+#include "Interfaces/IDisplayable.hpp"
 
 class Book;
 
-class Member {
+class Member : public IDisplayable {
 private:
     std::string Name_;
     std::string Surname_;
@@ -34,7 +35,7 @@ public:
     Member& operator=(Member&&) = delete;
 
     // Informations du membre
-    virtual void GetInfo() const;
+    void GetInfo() const override;
 
     // Gestion des emprunts
     bool BorrowBook(Book& BookToBorrow);
@@ -49,6 +50,9 @@ public:
 
     // Type du membre défini par chaque classe fille
     virtual std::string GetMemberType() const = 0;
+
+    // Recuperer l'identifiant du membre
+    const std::string& GetId() const;
 
     static int TotalMembers();
 };

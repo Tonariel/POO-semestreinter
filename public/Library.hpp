@@ -2,42 +2,57 @@
 #define LIBRARY_H
 
 #include "Book.hpp"
+#include "Catalog.hpp"
+#include "Members/Member.hpp"
+
 #include <string>
 #include <vector>
+#include <memory>
 #include <cstddef>
 
 class Library {
 private:
-    // La bibliotheque possede les livres du catalogue
+    // Ancien catalogue des livres (provisoire)
     std::vector<Book*> Catalog;
 
-    // Supprimer les livres du catalogue
+    // Nouveau catalogue des membres
+   ::Catalog<Member> members_;
+
+    // Liberation des livres
     void ClearCatalog() noexcept;
 
 public:
-    // Constructeur par defaut
     Library() = default;
-
-    // Destructeur
     ~Library();
 
-    // Regle des cinq : copie
-    Library(const Library& other);
-    Library& operator=(const Library& other);
+    // Copie interdite : les catalogues possedent leurs objets
+    Library(const Library& other) = delete;
+    Library& operator=(const Library& other) = delete;
 
-    // Regle des cinq : deplacement
+    // Deplacement autorise
     Library(Library&& other) noexcept;
     Library& operator=(Library&& other) noexcept;
 
-    // Gestion du catalogue
+    // Gestion des livres : code existant
     Book* AddBook(const std::string& title,
-                 const std::string& author);
+                  const std::string& author);
 
     Book* FindBook(const std::string& title) const;
-
     void DisplayCatalog() const;
-
     std::size_t Size() const;
+
+    // Gestion des membres
+    Member* AddMember(std::unique_ptr<Member> member);
+
+    Member* GetMember(std::size_t index);
+    const Member* GetMember(std::size_t index) const;
+    // Recherche d'un membre par son identifiant
+    Member* FindMemberById(const std::string& id);
+    const Member* FindMemberById(const std::string& id) const;
+
+    std::size_t MemberCount() const;
+
+    void DisplayMembers() const;
 };
 
 #endif
