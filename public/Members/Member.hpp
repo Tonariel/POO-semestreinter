@@ -16,13 +16,6 @@ private:
     std::string Surname_;
     std::string ID_unique;
 
-    // Un emprunt associe un livre original a sa copie personnelle.
-    // Le membre ne possede pas l'original.
-    struct BorrowRecord {
-        Book* original = nullptr;
-        std::unique_ptr<Book> copy;
-    };
-
     static int totalMembers_;
 
     std::vector<BorrowRecord> BorrowedBooks;
