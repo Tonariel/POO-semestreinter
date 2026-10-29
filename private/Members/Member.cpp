@@ -78,7 +78,7 @@ void Member::GetInfo() const
               << std::endl;
 }
 
-void AddBorrowedBook(Book* book)
+void Members::AddBorrowedBook(Book* book)
 {
     if (book != nullptr) {
         BorrowRecord record;
