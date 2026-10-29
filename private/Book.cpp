@@ -49,6 +49,17 @@ std::string Book::author() const {
     return author_;
 }
 
+bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
+    if (BooktoBorrow->status != Bookstatus::Available){
+        return false;
+    }
+    if(Membre->CanBorrow() == false){
+        return false;
+    }
+    Book* Copy = BooktoBorrow->Clone();
+    Membre->BorrowedBooks.add(Copy);
+}
+
 void Book::setStatus(Bookstatus newStatus) {
     status = newStatus;
 }

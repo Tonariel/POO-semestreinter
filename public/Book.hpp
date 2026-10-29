@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "Members/Member.hpp"
 
 enum class Bookstatus{
     Borrowed,
@@ -34,6 +35,7 @@ public:
     std::string BorrowedBy() const;
     std::string title() const;
     std::string author() const;
+    static bool BorrowBook (Member* Membre, Book* BooktoBorrow);
     void setStatus(Bookstatus newStatus);
     void setBorrowedBy(const std::string& newBorrower);
     static int totalBooks();
