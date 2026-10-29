@@ -78,6 +78,11 @@ void Member::GetInfo() const
               << std::endl;
 }
 
+void AddBorrowedBook(Book* book)
+{
+    
+}
+
 // ==========================================
 // VERIFICATION DE LA LIMITE D'EMPRUNT
 // ==========================================
