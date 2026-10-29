@@ -80,8 +80,15 @@ void Member::GetInfo() const
 
 void AddBorrowedBook(Book* book)
 {
+    if (book != nullptr) {
+        BorrowRecord record;
+        record.original = book;
+        record.copy = std::make_unique<Book>(*book);
 
+        BorrowedBooks.push_back(std::move(record));
+    }
 }
+
 
 // ==========================================
 // VERIFICATION DE LA LIMITE D'EMPRUNT
