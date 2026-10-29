@@ -26,25 +26,14 @@ Member::Member(std::string Name,
 //Destructeur
 Member::~Member()
 {
-    // Restaurer les originaux encore empruntes.
-    // Les originaux doivent toujours etre vivants ici.
-    for (auto& emprunt : BorrowedBooks) {
-        if (emprunt.original != nullptr &&
-            emprunt.original->BorrowedBy() == ID_unique) {
-
-            emprunt.original->setBorrowedBy("");
-            emprunt.original->setStatus(Bookstatus::Available);
-        }
-    }
-
-    // Liberation automatique des copies
-    BorrowedBooks.clear();
-
-    totalMembers_--;
-
     std::cout << "- Destruct Member : "
               << Name_ << " " << Surname_
               << std::endl;
+
+    for (Book* book : BorrowedBooks) {
+        delete book;
+    }
+    BorrowedBooks.clear();
 }
 
 //Affichage des informations du membre
