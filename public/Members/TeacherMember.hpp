@@ -34,6 +34,8 @@ public:
     std::string GetDepartement() const {
         return departement_;
     }
+
+    void GetInfo() const override;
 };
 
 #endif

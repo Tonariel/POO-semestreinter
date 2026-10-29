@@ -1,4 +1,3 @@
-
 #ifndef CATALOG_HPP
 #define CATALOG_HPP
 
@@ -6,6 +5,7 @@
 #include <memory>
 #include <cstddef>
 #include <utility>
+#include <iostream>
 
 template <typename T>
 class Catalog {
@@ -58,5 +58,20 @@ public:
         return elements_.empty();
     }
 };
+
+
+template <typename T>
+void DisplayGenericCatalog(const Catalog<T>& catalog)
+{
+    for (std::size_t i = 0; i < catalog.Size(); i++) {
+        const T* element = catalog.Get(i);
+
+        if (element != nullptr) {
+            element->GetInfo();
+            std::cout << std::endl;
+        }
+    }
+}
+
 
 #endif

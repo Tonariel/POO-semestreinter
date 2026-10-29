@@ -73,3 +73,9 @@ int Member::TotalMembers()
 {
     return totalMembers_;
 }
+
+// Recuperer l'identifiant du membre
+const std::string& Member::GetId() const
+{
+    return ID_unique;
+}
