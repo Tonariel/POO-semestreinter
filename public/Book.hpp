@@ -11,7 +11,6 @@ enum class Bookstatus{
 };
 
 enum class Bookstate{
-    New,
     Good,
     Damaged
 };
