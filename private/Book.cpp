@@ -44,6 +44,10 @@ void Book::BorrowedBy() const {
     cout << "nobody" << endl;
 }
 
+int Book::BorrowedBy_Size(){
+    return borrowedBy_.size();
+}
+
 string Book::title() const {
     return title_;
 }
@@ -187,4 +191,10 @@ string AudioBook::Narator() const{
 
 string AudioBook::Langage() const{
     return Langage_;
+}
+
+bool AudioBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
+    if (BorrowedBy_Size() < 2){
+
+    }
 }
