@@ -8,7 +8,7 @@
 enum class Bookstatus{
     Borrowed,
     Available,
-    Damaged
+    UnAvailable
 };
 
 enum class Bookstate{
