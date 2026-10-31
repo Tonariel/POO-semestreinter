@@ -127,13 +127,9 @@ EBook::EBook(const EBook &other)
 EBook* EBook::Clone()const{
     return new EBook(*this);
 }
-EBook* EBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
-    for (int i=0; i<BooktoReturn->borrowedBy_.size(); i++) {
-        if (BooktoReturn->borrowedBy_[i] == Membre->ReturnName()) {
-            BooktoReturn->borrowedBy_.erase(BooktoReturn->borrowedBy_.begin() + i);
-            break;
-        }
-    }
+bool EBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+    DeleteBorrowedBy(Membre);
+    return true;
 }
 
 string EBook::Url() const{
