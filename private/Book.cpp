@@ -126,10 +126,6 @@ EBook::EBook(const EBook &other)
 EBook* EBook::Clone()const{
     return new EBook(*this);
 }
-bool EBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
-    DeleteBorrowedBy(Membre);
-    return true;
-}
 
 string EBook::Url() const{
     return downloadUrl_;
@@ -141,6 +137,11 @@ int EBook::size() const{
 
 bool EBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
     AddBorrowedBy(Membre);
+    return true;
+}
+
+bool EBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+    DeleteBorrowedBy(Membre);
     return true;
 }
 
@@ -176,6 +177,12 @@ bool PhysicalBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
     }
     AddBorrowedBy(Membre);
     setStatus(Bookstatus::Borrowed);
+    return true;
+}
+
+bool PhysicalBook::DeleteSpecialTest(Book* BooktoBorrow, Member* Membre){
+    DeleteBorrowedBy(Membre);
+    setStatus(Bookstatus::Available);
     return true;
 }
 
