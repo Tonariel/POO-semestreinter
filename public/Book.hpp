@@ -77,6 +77,7 @@ public:
     void SetState(Bookstate Newstate);
     Bookstate State() const;
     bool SpecialTest(Book* BooktoBorrow, Member* Memebre) override;
+    bool DeleteSpecialTest(Book* BooktoBorrow, Member* Membre) override;
 };
 
 class AudioBook : public Book{
@@ -93,6 +94,7 @@ public:
     std::string Narator() const;
     std::string Langage() const;
     bool SpecialTest(Book* BooktoBorrow, Member* Membre) override;
+    bool DeleteSpecialTest(Book* Booktoreturn, Member* Membre) override;
 };
 
 #endif
