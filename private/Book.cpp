@@ -65,9 +65,14 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
         cout << "Member cannot borrow more books." << endl;
         return false;
     }
+<<<<<<< Updated upstream
     if (BooktoBorrow->SpecialTest(BooktoBorrow) == false){
         return false;
     }
+=======
+    BooktoBorrow->AddBorrowedBy({Membre->ReturnName()});
+    BooktoBorrow->status = Bookstatus::Borrowed;
+>>>>>>> Stashed changes
     Book* Copy = BooktoBorrow->Clone();
     Membre->AddBorrowedBook(Copy);
     return true;
@@ -80,7 +85,7 @@ bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
         }
         delete Copy;
         BooktoReturn->setStatus(Bookstatus::Available);
-        BooktoReturn->setBorrowedBy("");
+        BooktoReturn->AddBorrowedBy({});
         return true;
 }
 
@@ -88,8 +93,12 @@ void Book::setStatus(Bookstatus newStatus) {
     status = newStatus;
 }
 
-void Book::setBorrowedBy(const std::string& newBorrower) {
+void Book::AddBorrowedBy(const std::vector<std::string>& newBorrower) {
     borrowedBy_ = newBorrower;
+}
+
+void Book::DeleteBorrowedBy(const std::vector<std::string>& oldBorrower) {
+    borrowedBy_ = "";
 }
 
 int Book::totalBooks() {
