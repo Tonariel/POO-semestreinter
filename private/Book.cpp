@@ -222,3 +222,8 @@ bool AudioBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
         AddBorrowedBy(Membre);
     }
 }
+
+bool AudioBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+    
+
+}
