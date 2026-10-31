@@ -1,0 +1,71 @@
+=== TEST LIBRARY ===
+Membres au depart : 0
+
+=== TEST 1 : AJOUT ===
++ Construct Member : Jean Dupont
++ Construct Member : Paul Martin
+
+=== TEST INTERFACE ===
+Type : Etudiant
+Nom : Jean
+Prenom : Dupont
+Identifiant : E001
+Emprunts : 0 / 2
+Programme : Informatique
+Nombre de membres : 2
+
+=== TEST 2 : RECHERCHE ===
+Membre E001 : Etudiant
+Membre P001 : Enseignant
+ID inexistant : 1
+Recherche constante : 1
+
+=== TEST 3 : POINTEUR NUL ===
+Ajout refuse : 1
+Nombre de membres : 2
+
+=== TEST : IDENTIFIANT EN DOUBLE ===
++ Construct Member : Lucas Bernard
+- Destruct Member : Lucas Bernard
+Doublon refuse : 1
+Nombre de membres : 2
+Membres vivants : 2
+
+=== TEST 4 : DEPLACEMENT ===
+Nouvelle bibliotheque : 2
+Ancienne bibliotheque : 0
+Membres vivants : 2
+
+=== TEST 5 : AFFECTATION ===
++ Construct Member : Marie Tremblay
+Avant affectation : 3 membres vivants
+- Destruct Member : Marie Tremblay
+Destination : 2
+Source apres affectation : 0
+Membres vivants : 2
+
+=== TEST 6 : AFFICHAGE ===
+
+=== Membres de la bibliotheque ===
+Type : Etudiant
+Nom : Jean
+Prenom : Dupont
+Identifiant : E001
+Emprunts : 0 / 2
+Programme : Informatique
+
+Type : Enseignant
+Nom : Paul
+Prenom : Martin
+Identifiant : P001
+Emprunts : 0 / 3
+Departement : Mathematiques
+
+[Library] Destruction de la bibliotheque
+- Destruct Member : Jean Dupont
+- Destruct Member : Paul Martin
+[Library] Destruction de la bibliotheque
+[Library] Destruction de la bibliotheque
+
+=== VERIFICATION FINALE ===
+Membres apres destruction : 0

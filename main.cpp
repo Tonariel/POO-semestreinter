@@ -308,6 +308,42 @@ int main()
 
         bibliotheque.DisplayCatalog();
 
+        // ==========================================
+        // TEST : RETOUR PAR UN AUTRE MEMBRE
+        // ==========================================
+
+        std::cout << "\n=== TEST : RETOUR NON AUTORISE ===\n";
+
+        const std::size_t empruntsAvant = etudiant->GetBorrowedCount();
+        const int livresAvant = Book::totalBooks();
+
+        bool retourInterdit = Book::ReturnBook(enseignant, b1);
+
+        Verifier(!retourInterdit,
+                "Un autre membre ne peut pas rendre ce livre");
+
+        Verifier(b1->Status() == Bookstatus::Borrowed,
+                "Le livre reste emprunte");
+
+        Verifier(etudiant->GetBorrowedCount() == empruntsAvant,
+                "Les emprunts du proprietaire sont conserves");
+
+        Verifier(Book::totalBooks() == livresAvant,
+                "Aucune copie detruite apres le refus");
+
+        // ==========================================
+        // TEST : IDENTITE DE L'EMPRUNTEUR
+        // ==========================================
+
+        std::cout << "\n=== TEST : IDENTITE EMPRUNTEUR ===\n";
+
+        Verifier(b1->BorrowedBy() == etudiant->ReturnName(),
+                "Le livre enregistre le nom de l'emprunteur");
+
+        Verifier(b2->BorrowedBy() == etudiant->ReturnName(),
+                "Le deuxieme livre enregistre l'emprunteur");
+
+
         // ==================================
         // TEST 8 : LIVRE INDISPONIBLE
         // ==================================
@@ -388,6 +424,22 @@ int main()
         bool retourP2 = Book::ReturnBook(enseignant, b4);
         bool retourP3 = Book::ReturnBook(enseignant, b5);
 
+        // ==========================================
+        // TEST : NETTOYAGE DES RETOURS
+        // ==========================================
+
+        Verifier(b1->BorrowedBy().empty(),
+                "Emprunteur efface apres retour du livre 1");
+
+        Verifier(b2->BorrowedBy().empty(),
+                "Emprunteur efface apres retour du livre 2");
+
+        Verifier(b4->BorrowedBy().empty(),
+                "Emprunteur efface apres retour du livre 4");
+
+        Verifier(b5->BorrowedBy().empty(),
+                "Emprunteur efface apres retour du livre 5");
+
         Verifier(
             retourE2 && retourP1 && retourP2 && retourP3,
             "Tous les livres rendus"
@@ -459,8 +511,83 @@ int main()
         Verifier(nouvelleBibliotheque.Size() == 0,
                  "Source vide apres affectation");
 
+        // ==========================================
+        // TEST : DEUX EXEMPLAIRES IDENTIQUES
+        // ==========================================
+
+        std::cout << "\n=== TEST : EXEMPLAIRES IDENTIQUES ===\n";
+
+        {
+            Library testLibrary;
+
+            Member* membreTest = testLibrary.AddMember(
+                std::make_unique<StudentMember>(
+                    "Test", "Doublon", "T001", "Informatique"
+                )
+            );
+
+            Book* original1 = testLibrary.AddBook(
+                std::make_unique<PhysicalBook>(
+                    "Dune", "Frank Herbert", "Rayon A", Bookstate::Good
+                )
+            );
+
+            Book* original2 = testLibrary.AddBook(
+                std::make_unique<PhysicalBook>(
+                    "Dune", "Frank Herbert", "Rayon B", Bookstate::Good
+                )
+            );
+
+            bool emprunt = Book::BorrowBook(membreTest, original1);
+
+            Verifier(emprunt, "Premier exemplaire emprunte");
+
+            // Tentative de retour du deuxieme exemplaire,
+            // alors que le membre a emprunte le premier.
+            bool mauvaisRetour = Book::ReturnBook(membreTest, original2);
+
+            Verifier(!mauvaisRetour,
+                    "Impossible de rendre le mauvais exemplaire");
+
+            Verifier(original1->Status() == Bookstatus::Borrowed,
+                    "Le premier exemplaire reste emprunte");
+        }
+                 
         destination.DisplayMembers();
         destination.DisplayCatalog();
+
+            // ==========================================
+        // TEST E : DESTRUCTION AVEC EMPRUNT ACTIF
+        // ==========================================
+
+        std::cout << "\n=== TEST E : DESTRUCTION EMPRUNTEUR ===\n";
+
+        {
+            PhysicalBook livre(
+                "Test destruction",
+                "Auteur test",
+                "Rayon Z",
+                Bookstate::Good
+            );
+
+            {
+                StudentMember membre(
+                    "Test", "Destruction", "T002", "Informatique"
+                );
+
+                bool emprunt = Book::BorrowBook(&membre, &livre);
+
+                Verifier(emprunt, "Emprunt avant destruction");
+
+                Verifier(livre.Status() == Bookstatus::Borrowed,
+                        "Livre marque comme emprunte");
+            }
+
+            // Le membre a ete detruit.
+            Verifier(livre.Status() == Bookstatus::Available,
+                    "Livre libere apres destruction du membre");
+        }
+
     }
 
     // ==================================
