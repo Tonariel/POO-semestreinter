@@ -94,8 +94,9 @@ bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
             return false;
         }
         delete Copy;
-        BooktoReturn->setStatus(Bookstatus::Available);
-        BooktoReturn->AddBorrowedBy({});
+        BooktoReturn->DeleteSpecialTest(BooktoReturn, Membre);
+        //BooktoReturn->setStatus(Bookstatus::Available);
+        //BooktoReturn->AddBorrowedBy({});
         return true;
 }
 
