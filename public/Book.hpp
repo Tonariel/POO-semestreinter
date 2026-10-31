@@ -21,7 +21,7 @@ private:
     std::string title_;
     std::string author_;
     Bookstatus status = Bookstatus::Available;
-    std::vector<string> borrowedBy_;
+    std::vector<std::string> borrowedBy_;
     static int totalBooks_;
 
 public:
