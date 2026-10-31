@@ -49,6 +49,12 @@ std::string Book::author() const {
     return author_;
 }
 
+bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre){
+    BooktoBorrow->setBorrowedBy(Membre->ReturnName());
+    BooktoBorrow->status = Bookstatus::Borrowed;
+    return true;
+}
+
 bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if (BooktoBorrow->status != Bookstatus::Available){
         cout << "the book " << BooktoBorrow->title() << "is already borrowed by " << BooktoBorrow->BorrowedBy() << endl;
@@ -59,8 +65,9 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
         cout << "Member cannot borrow more books." << endl;
         return false;
     }
-    BooktoBorrow->setBorrowedBy(Membre->ReturnName());
-    BooktoBorrow->status = Bookstatus::Borrowed;
+    if (BooktoBorrow->SpecialTest(BooktoBorrow) == false){
+        return false;
+    }
     Book* Copy = BooktoBorrow->Clone();
     Membre->AddBorrowedBook(Copy);
     return true;
@@ -107,6 +114,10 @@ int EBook::size() const{
     return fileSize_;
 }
 
+bool EBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
+    setBorrowedBy(Membre->ReturnName());
+    return true;
+}
 
 PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, Bookstate state)
     :Book{title, author}, Localisation_{Localisation}, state_{state}{}
