@@ -38,7 +38,10 @@ Bookstatus Book::Status() const {
 }
 
 string Book::BorrowedBy() const {
-    return borrowedBy_;
+    for (i=0; i<borrowedBy_.size(); i++) {
+        return borrowedBy_[i];
+    }
+    return "";
 }
 
 string Book::title() const {
