@@ -32,6 +32,7 @@ public:
     void Destroy_Clone(Book *Copy);
     Book(const Book& other);
     Bookstatus Status() const;
+    int BorrowedBy_Size();
     void BorrowedBy() const;
     std::string title() const;
     std::string author() const;
@@ -88,6 +89,7 @@ public:
     int Duration() const;
     std::string Narator() const;
     std::string Langage() const;
+    bool SpecialTest(Book* BooktoBorrow, Member* Membre) override;
 };
 
 #endif
