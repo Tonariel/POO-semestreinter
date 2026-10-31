@@ -62,6 +62,12 @@ bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre){
     return true;
 }
 
+bool Book::DeleteSpecialTest (Book* BooktoReturn, Member* Membre){
+    BooktoReturn->setStatus(Bookstatus::Available);
+    BooktoReturn->DeleteBorrowedBy(Membre);
+    return true;
+}
+
 
 bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if (BooktoBorrow->status != Bookstatus::Available){
@@ -88,8 +94,6 @@ bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
         }
         delete Copy;
         BooktoReturn->DeleteSpecialTest(BooktoReturn, Membre);
-        //BooktoReturn->setStatus(Bookstatus::Available);
-        //BooktoReturn->DeleteBorrowedBy({});
         return true;
 }
 
