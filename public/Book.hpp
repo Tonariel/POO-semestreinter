@@ -20,7 +20,7 @@ private:
     std::string title_;
     std::string author_;
     Bookstatus status = Bookstatus::Available;
-    std::string borrowedBy_ = "";
+    std::vector<string> borrowedBy_;
     static int totalBooks_;
 
 public:
@@ -34,6 +34,7 @@ public:
     std::string BorrowedBy() const;
     std::string title() const;
     std::string author() const;
+    virtual bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre);
     static bool BorrowBook (Member* Membre, Book* BooktoBorrow);
     static bool ReturnBook (Member* Membre, Book*BooktoReturn);
     void setStatus(Bookstatus newStatus);
@@ -54,6 +55,7 @@ public:
     EBook* Clone()const override;
     std::string Url() const;
     int size() const;
+    bool SpecialTest(Book* BooktoBorrow, Member* Membre) override;
 };
 
 class PhysicalBook : public Book{
