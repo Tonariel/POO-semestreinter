@@ -37,6 +37,7 @@ public:
     std::string title() const;
     std::string author() const;
     virtual bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre);
+    virtual bool DeleteSpecialTest(Book* BooktoReturn, Member* Membre);
     static bool BorrowBook (Member* Membre, Book* BooktoBorrow);
     static bool ReturnBook (Member* Membre, Book*BooktoReturn);
     void setStatus(Bookstatus newStatus);
@@ -59,6 +60,8 @@ public:
     std::string Url() const;
     int size() const;
     bool SpecialTest(Book* BooktoBorrow, Member* Membre) override;
+    bool DeleteSpecialTest(Book* BooktoReturn, Member* Membre) override;
+
 };
 
 class PhysicalBook : public Book{
