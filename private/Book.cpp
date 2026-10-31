@@ -61,14 +61,7 @@ bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre){
     BooktoBorrow->status = Bookstatus::Borrowed;
     return true;
 }
-bool Book::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
-    for (int i=0; i<BooktoReturn->borrowedBy_.size(); i++) {
-        if (BooktoReturn->borrowedBy_[i] == Membre->ReturnName()) {
-            BooktoReturn->borrowedBy_.erase(BooktoReturn->borrowedBy_.begin() + i);
-            break;
-        }
-    }
-}
+
 
 bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if (BooktoBorrow->status != Bookstatus::Available){
@@ -128,6 +121,14 @@ EBook::EBook(const EBook &other)
 
 EBook* EBook::Clone()const{
     return new EBook(*this);
+}
+EBook* EBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+    for (int i=0; i<BooktoReturn->borrowedBy_.size(); i++) {
+        if (BooktoReturn->borrowedBy_[i] == Membre->ReturnName()) {
+            BooktoReturn->borrowedBy_.erase(BooktoReturn->borrowedBy_.begin() + i);
+            break;
+        }
+    }
 }
 
 string EBook::Url() const{
