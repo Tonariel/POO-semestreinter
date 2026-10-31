@@ -89,7 +89,7 @@ bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
         delete Copy;
         BooktoReturn->DeleteSpecialTest(BooktoReturn, Membre);
         //BooktoReturn->setStatus(Bookstatus::Available);
-        //BooktoReturn->AddBorrowedBy({});
+        //BooktoReturn->DeleteBorrowedBy({});
         return true;
 }
 
