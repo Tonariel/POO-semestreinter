@@ -52,7 +52,6 @@ std::string Book::author() const {
 bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if (BooktoBorrow->status != Bookstatus::Available){
         cout << "the book " << BooktoBorrow->title() << "is already borrowed by " << BooktoBorrow->BorrowedBy() << endl;
-        //add texte que livre occupé, (personne qui l'a avec borowed by) 
         return false;
     }
     if(Membre->CanBorrow() == false){
