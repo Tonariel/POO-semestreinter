@@ -166,11 +166,11 @@ Bookstate PhysicalBook::State() const{
 }
 
 bool PhysicalBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
-    if (Status()== Bookstatus::Damaged){
+    if (Status()== Bookstatus::UnAvailable){
         return false;
     }
     if (State() == Bookstate::Damaged){
-        setStatus(Bookstatus::Damaged);
+        setStatus(Bookstatus::UnAvailable);
         return false;
     }
     AddBorrowedBy(Membre);
@@ -202,7 +202,15 @@ string AudioBook::Langage() const{
 }
 
 bool AudioBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
-    if (BorrowedBy_Size() < 2){
-
+    if (Status() == Bookstatus::Borrowed){
+        return false;
+    }
+    if (BorrowedBy_Size() == 1){
+        setStatus(Bookstatus::Borrowed);
+        AddBorrowedBy(Membre);
+        return true;
+    }
+    if (BorrowedBy_Size == 0){
+        AddBorrowedBy(Membre);
     }
 }
