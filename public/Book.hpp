@@ -38,7 +38,8 @@ public:
     static bool BorrowBook (Member* Membre, Book* BooktoBorrow);
     static bool ReturnBook (Member* Membre, Book*BooktoReturn);
     void setStatus(Bookstatus newStatus);
-    void setBorrowedBy(const std::string& newBorrower);
+    void AddBorrowedBy(const std::vector<std::string>& newBorrower);
+    void DeleteBorrowedBy(const std::vector<std::string>& oldBorrower);
     static int totalBooks();
 };
 
