@@ -37,11 +37,11 @@ Bookstatus Book::Status() const {
     return status;
 }
 
-string Book::BorrowedBy() const {
+void Book::BorrowedBy() const {
     for (i=0; i<borrowedBy_.size(); i++) {
-        return borrowedBy_[i];
+        cout << borrowedBy_[i] << endl;
     }
-    return "";
+    cout << "nobody" << endl;
 }
 
 string Book::title() const {
