@@ -88,13 +88,12 @@ void Book::setStatus(Bookstatus newStatus) {
     status = newStatus;
 }
 
-void Book::AddBorrowedBy(const std::vector<std::string>& newBorrower) {
-    borrowedBy_.push_back(newBorrower);
+void Book::AddBorrowedBy(Member* newBorrower) {
+    borrowedBy_.push_back(newBorrower->borrowedBy_);
 }
 
-void Book::DeleteBorrowedBy(const std::vector<std::string>& oldBorrower) {
-    for (const auto& borrower : oldBorrower) {
-        auto it = std::find(borrowedBy_.begin(), borrowedBy_.end(), borrower);
+void Book::DeleteBorrowedBy(Member* oldBorrower) {
+    for (int i=0; Book.borrowedBy_[i]== oldBorrower->name_; i++) {
         if (it != borrowedBy_.end()) {
             borrowedBy_.erase(it);
         }
