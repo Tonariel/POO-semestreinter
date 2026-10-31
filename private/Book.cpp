@@ -180,7 +180,7 @@ bool PhysicalBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
     return true;
 }
 
-bool PhysicalBook::DeleteSpecialTest(Book* BooktoBorrow, Member* Membre){
+bool PhysicalBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
     DeleteBorrowedBy(Membre);
     setStatus(Bookstatus::Available);
     return true;
