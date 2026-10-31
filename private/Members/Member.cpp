@@ -26,15 +26,21 @@ Member::Member(std::string Name,
 //Destructeur
 Member::~Member()
 {
-    std::cout << "- Destruct Member : "
-              << Name_ << " " << Surname_
-              << std::endl;
-
+    // Liberer les copies des livres encore empruntes
     for (Book* book : BorrowedBooks) {
         delete book;
     }
+
     BorrowedBooks.clear();
+
+    // Mettre a jour le nombre de membres vivants
+    totalMembers_--;
+
+    std::cout << "- Destruct Member : "
+              << Name_ << " " << Surname_
+              << std::endl;
 }
+
 
 //Affichage des informations du membre
 void Member::GetInfo() const
