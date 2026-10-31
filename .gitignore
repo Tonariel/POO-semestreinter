@@ -2,4 +2,7 @@
 .vscode/
 
 # Dossier de compilation et artefacts
+Build/
 build/
+BuildSanitizer/
+buildSanitizer/

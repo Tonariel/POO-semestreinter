@@ -1,37 +1,37 @@
-
 #include "Library.hpp"
+
 #include <iostream>
 #include <utility>
 
 using namespace std;
 
 
-// ==================================================
-// TACHE 3 : GESTION DU CATALOGUE
-// ==================================================
+// ==========================================
+// GESTION DES LIVRES (ancienne version)
+// ==========================================
 
 // Ajouter un livre dans la bibliotheque
-void Library::AddBook(const std::string& title,
-                      const std::string& author) {
-
-    Book* newBook = new Book(title, author);
-
-    try {
-        Catalog.push_back(newBook);
+Book* Library::AddBook(std::unique_ptr<Book> book)
+{
+    if (book == nullptr) {
+        return nullptr;
     }
-    catch (...) {
-        delete newBook;
-        throw;
-    }
+
+    Book* addedBook = book.get();
+
+    books_.Add(std::move(book));
+
+    return addedBook;
 }
 
 
-// Rechercher un livre par son titre
-Book* Library::FindBook(const std::string& title) const {
+// Recherche modifiable
+Book* Library::FindBook(const std::string& title)
+{
+    for (std::size_t i = 0; i < books_.Size(); ++i) {
+        Book* book = books_.Get(i);
 
-    for (Book* book : Catalog) {
-
-        if (book->title() == title) {
+        if (book != nullptr && book->title() == title) {
             return book;
         }
     }
@@ -39,110 +39,158 @@ Book* Library::FindBook(const std::string& title) const {
     return nullptr;
 }
 
+// Recherche en lecture seule
+const Book* Library::FindBook(const std::string& title) const
+{
+    for (std::size_t i = 0; i < books_.Size(); ++i) {
+        const Book* book = books_.Get(i);
 
-// Afficher le catalogue
-void Library::DisplayCatalog() const {
+        if (book != nullptr && book->title() == title) {
+            return book;
+        }
+    }
 
-    cout << "\n=== Catalogue de la bibliotheque ==="
+    return nullptr;
+}
+
+// Afficher le catalogue des livres
+void Library::DisplayCatalog() const
+{
+    std::cout << "\n=== Catalogue des livres ===\n";
+
+    for (std::size_t i = 0; i < books_.Size(); ++i) {
+        const Book* book = books_.Get(i);
+
+        if (book != nullptr) {
+            book->Display();
+
+            std::cout << " | "
+                      << (book->Status() == Bookstatus::Available
+                          ? "Disponible"
+                          : "Emprunte")
+                      << '\n';
+        }
+    }
+}
+
+std::size_t Library::Size() const
+{
+    return books_.Size();
+}
+
+Book* Library::GetBook(std::size_t index)
+{
+    return books_.Get(index);
+}
+
+const Book* Library::GetBook(std::size_t index) const
+{
+    return books_.Get(index);
+}
+
+// Ajouter un membre dans la bibliotheque
+Member* Library::AddMember(std::unique_ptr<Member> member)
+{
+    // Refuser un pointeur nul
+    if (member == nullptr) {
+        return nullptr;
+    }
+
+    // Refuser un identifiant deja utilise
+    if (FindMemberById(member->GetId()) != nullptr) {
+        return nullptr;
+    }
+
+    // Ajouter le membre au catalogue
+    Member* nouveauMembre = member.get();
+
+    members_.Add(std::move(member));
+
+    return nouveauMembre;
+}
+
+// Recuperer un membre par son indice
+Member* Library::GetMember(std::size_t index)
+{
+    return members_.Get(index);
+}
+
+
+// Recuperer un membre en lecture seule
+const Member* Library::GetMember(std::size_t index) const
+{
+    return members_.Get(index);
+}
+
+
+// Nombre de membres dans la bibliotheque
+std::size_t Library::MemberCount() const
+{
+    return members_.Size();
+}
+
+// Afficher les informations de tous les membres
+void Library::DisplayMembers() const
+{
+    cout << "\n=== Membres de la bibliotheque ==="
          << endl;
 
-    for (Book* book : Catalog) {
-
-        cout << book->title()
-             << " par " << book->author()
-             << " : ";
-
-        if (book->Status() == Bookstatus::Available) {
-            cout << "Disponible";
-        }
-        else {
-            cout << "Emprunte";
-        }
-
-        cout << endl;
-    }
+    DisplayGenericCatalog(members_);
 }
 
 
-// Retourner le nombre de livres
-std::size_t Library::Size() const {
-    return Catalog.size();
+// Destruction et déplacement de librar
+Library::~Library()
+{
+    std::cout << "[Library] Destruction de la bibliotheque\n";
 }
-
-
-// Liberer la memoire du catalogue
-void Library::ClearCatalog() noexcept {
-
-    for (Book* book : Catalog) {
-        delete book;
-    }
-
-    Catalog.clear();
-}
-
-
-// Destructeur
-Library::~Library() {
-
-    cout << "[Library] Destruction du catalogue ("
-         << Catalog.size()
-         << " livres)" << endl;
-
-    ClearCatalog();
-}
-
-
-// ==================================================
-// TACHE 4 : COPIE ET DEPLACEMENT DE LIBRARY
-// ==================================================
-
-// Constructeur par copie : copie profonde
-Library::Library(const Library& other) {
-
-    Catalog.reserve(other.Catalog.size());
-
-    try {
-        for (Book* book : other.Catalog) {
-            Catalog.push_back(new Book(*book));
-        }
-    }
-    catch (...) {
-        ClearCatalog();
-        throw;
-    }
-}
-
-
-// Operateur d'affectation par copie
-Library& Library::operator=(const Library& other) {
-
-    if (this != &other) {
-
-        Library temporary(other);
-
-        Catalog.swap(temporary.Catalog);
-    }
-
-    return *this;
-}
-
 
 // Constructeur de deplacement
-Library::Library(Library&& other) noexcept {
-
-    Catalog.swap(other.Catalog);
+Library::Library(Library&& other) noexcept
+    : books_(std::move(other.books_)),
+      members_(std::move(other.members_))
+{
 }
 
-
 // Operateur d'affectation par deplacement
-Library& Library::operator=(Library&& other) noexcept {
-
+Library& Library::operator=(Library&& other) noexcept
+{
     if (this != &other) {
-
-        ClearCatalog();
-
-        Catalog.swap(other.Catalog);
+        members_ = std::move(other.members_);
+        books_ = std::move(other.books_);
     }
 
     return *this;
+}
+
+// ==========================================
+// RECHERCHE DES MEMBRES PAR IDENTIFIANT
+// ==========================================
+
+// Recherche modifiable
+Member* Library::FindMemberById(const std::string& id)
+{
+    for (std::size_t i = 0; i < members_.Size(); ++i) {
+        Member* membre = members_.Get(i);
+
+        if (membre != nullptr && membre->GetId() == id) {
+            return membre;
+        }
+    }
+
+    return nullptr;
+}
+
+// Recherche en lecture seule
+const Member* Library::FindMemberById(const std::string& id) const
+{
+    for (std::size_t i = 0; i < members_.Size(); ++i) {
+        const Member* membre = members_.Get(i);
+
+        if (membre != nullptr && membre->GetId() == id) {
+            return membre;
+        }
+    }
+
+    return nullptr;
 }

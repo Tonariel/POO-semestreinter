@@ -21,6 +21,18 @@ Book::~Book() {
     cout << "- Destruct " << title_ << " (count=" << totalBooks_ << ")" << endl;
 }
 
+void Book::Display() const {
+    cout << "Book :" << title_;
+}
+
+Book* Book::Clone ()const {
+    return new Book(*this);
+}
+
+void Book::Destroy_Clone (Book *Copy){
+    delete Copy;
+}
+
 Bookstatus Book::Status() const {
     return status;
 }
@@ -37,6 +49,34 @@ std::string Book::author() const {
     return author_;
 }
 
+bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
+    if (BooktoBorrow->status != Bookstatus::Available){
+        cout << "the book " << BooktoBorrow->title() << "is already borrowed by " << BooktoBorrow->BorrowedBy() << endl;
+        //add texte que livre occupé, (personne qui l'a avec borowed by) 
+        return false;
+    }
+    if(Membre->CanBorrow() == false){
+        cout << "Member cannot borrow more books." << endl;
+        return false;
+    }
+    BooktoBorrow->setBorrowedBy(Membre->ReturnName());
+    BooktoBorrow->status = Bookstatus::Borrowed;
+    Book* Copy = BooktoBorrow->Clone();
+    Membre->AddBorrowedBook(Copy);
+    return true;
+}
+
+bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
+        Book* Copy = Membre->GetReleasedBook(BooktoReturn->title_, BooktoReturn->author_);
+        if (Copy == nullptr){
+            return false;
+        }
+        delete Copy;
+        BooktoReturn->setStatus(Bookstatus::Available);
+        BooktoReturn->setBorrowedBy("");
+        return true;
+}
+
 void Book::setStatus(Bookstatus newStatus) {
     status = newStatus;
 }
@@ -47,4 +87,67 @@ void Book::setBorrowedBy(const std::string& newBorrower) {
 
 int Book::totalBooks() {
     return totalBooks_;
+}
+
+EBook::EBook(std::string title, std::string author, std::string url, int size)
+    :Book{title, author}, downloadUrl_{url}, fileSize_{size}{}
+
+EBook::EBook(const EBook &other)
+    :Book (other), downloadUrl_(other.downloadUrl_),fileSize_(other.fileSize_){}
+
+EBook* EBook::Clone()const{
+    return new EBook(*this);
+}
+
+string EBook::Url() const{
+    return downloadUrl_;
+}
+
+int EBook::size() const{
+    return fileSize_;
+}
+
+
+PhysicalBook::PhysicalBook(std::string title, std::string author, std::string Localisation, Bookstate state)
+    :Book{title, author}, Localisation_{Localisation}, state_{state}{}
+
+PhysicalBook::PhysicalBook(const PhysicalBook &other)
+    :Book(other), Localisation_(other.Localisation_), state_(other.state_){}
+
+PhysicalBook *PhysicalBook::Clone()const{
+    return new PhysicalBook(*this);
+}
+
+string PhysicalBook::Localisation() const{
+    return Localisation_;
+}
+
+void PhysicalBook::SetState(Bookstate Newstate){
+    state_ = Newstate;
+} 
+
+Bookstate PhysicalBook::State() const{
+    return state_;
+}
+
+AudioBook::AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage)
+    :Book{title, author}, Duration_{Duration}, Narator_{Narator}, Langage_{Langage}{}
+
+AudioBook::AudioBook(const AudioBook &other)
+    :Book(other), Duration_(other.Duration_), Narator_(other.Narator_), Langage_(other.Langage_){}
+
+AudioBook* AudioBook::Clone()const{
+    return new AudioBook(*this);
+}
+
+int AudioBook::Duration() const{
+    return Duration_;
+}
+
+string AudioBook::Narator() const{
+    return Narator_;
+}
+
+string AudioBook::Langage() const{
+    return Langage_;
 }

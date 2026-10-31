@@ -1,9 +1,17 @@
-
 #include "Student.hpp"
 using namespace std;
 
 Student::Student(std::string Name, std::string Surname, std::string Id)
     : Name_{Name}, Surname_{Surname}, ID_unique(Id) {}
+
+
+
+Student::~Student(){
+    for (size_t i = 0 ; i < BorrowedBooks.size(); i++){
+        delete BorrowedBooks[i];
+    }
+    BorrowedBooks.clear();
+}
 
 
 void Student::GetInfo() const {
@@ -41,12 +49,13 @@ bool Student::BorrowBook(Book& BookToBorrow) {
 
     BookToBorrow.setBorrowedBy(Name_);
     BookToBorrow.setStatus(Bookstatus::Borrowed);
-    BorrowedBooks.push_back(&BookToBorrow);
+    Book* PersoCopy = new Book(BookToBorrow);
+    BorrowedBooks.push_back(PersoCopy);
 
 
-    std::cout << Name_
+    cout << Name_
               << " a emprunte le livre "
-              << BookToBorrow.title() << std::endl;
+              << PersoCopy->title() << endl;
 
     if (BorrowedBooks.size() >= 5) {
         CanBorrow_ = false;
@@ -63,7 +72,8 @@ bool Student::ReturnBook(Book& BookToReturn) {
 
     size_t bookIndex = 0;
     while (bookIndex < BorrowedBooks.size() &&
-            BorrowedBooks[bookIndex] != &BookToReturn) {
+            (BorrowedBooks[bookIndex]->title() != BookToReturn.title()
+            || BorrowedBooks[bookIndex]->author() != BookToReturn.author())){
         bookIndex++;
     }
 
@@ -78,7 +88,8 @@ bool Student::ReturnBook(Book& BookToReturn) {
                   << std::endl;
         return false;
     }
-
+    Book* PersoCopy = BorrowedBooks[bookIndex];
+    delete PersoCopy;
     BorrowedBooks.erase(BorrowedBooks.begin() + bookIndex);
 
     BookToReturn.setStatus(Bookstatus::Available);

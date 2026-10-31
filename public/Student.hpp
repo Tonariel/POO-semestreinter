@@ -1,4 +1,3 @@
-
 #ifndef STUDENT_H
 #define STUDENT_H
 
@@ -17,6 +16,9 @@ class Student {
 public:
     Student(std::string Name, std::string Surname, std::string Id);
 
+    ~Student();
+
+    
     void GetInfo() const;
 
     bool BorrowBook(Book& BookToBorrow);
