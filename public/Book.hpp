@@ -7,7 +7,8 @@
 
 enum class Bookstatus{
     Borrowed,
-    Available
+    Available,
+    Damaged
 };
 
 enum class Bookstate{
@@ -71,6 +72,7 @@ public:
     std::string Localisation() const;
     void SetState(Bookstate Newstate);
     Bookstate State() const;
+    bool SpecialTest(Book* BooktoBorrow, Member* Memebre) override;
 };
 
 class AudioBook : public Book{

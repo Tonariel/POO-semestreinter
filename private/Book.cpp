@@ -152,6 +152,20 @@ Bookstate PhysicalBook::State() const{
     return state_;
 }
 
+bool PhysicalBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
+    if (Status()== Bookstatus::Damaged){
+        return false;
+    }
+    if (State() == Bookstate::Damaged){
+        setStatus(Bookstatus::Damaged);
+        return false;
+    }
+    AddBorrowedBy(Membre);
+    setStatus(Bookstatus::Borrowed);
+    return true;
+}
+
+
 AudioBook::AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage)
     :Book{title, author}, Duration_{Duration}, Narator_{Narator}, Langage_{Langage}{}
 
