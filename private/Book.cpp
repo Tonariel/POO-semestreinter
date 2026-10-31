@@ -224,6 +224,13 @@ bool AudioBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
 }
 
 bool AudioBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
-    
-
+    if (Status() == Bookstatus::Borrowed){
+        setStatus(Bookstatus::Available);
+        DeleteBorrowedBy(Membre);
+        return true;
+    }
+    else{
+        DeleteBorrowedBy(Membre);
+        return true;
+    }
 }
