@@ -36,7 +36,7 @@ public:
     void BorrowedBy() const;
     std::string title() const;
     std::string author() const;
-    virtual bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre);
+    virtual bool SpecialTest (Book* BooktoBorrow, Member* Membre);
     virtual bool DeleteSpecialTest(Book* BooktoReturn, Member* Membre);
     static bool BorrowBook (Member* Membre, Book* BooktoBorrow);
     static bool ReturnBook (Member* Membre, Book*BooktoReturn);
