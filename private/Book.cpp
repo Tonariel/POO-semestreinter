@@ -38,7 +38,7 @@ Bookstatus Book::Status() const {
 }
 
 void Book::BorrowedBy() const {
-    for (i=0; i<borrowedBy_.size(); i++) {
+    for (int i=0; i<borrowedBy_.size(); i++) {
         cout << borrowedBy_[i] << endl;
     }
     cout << "nobody" << endl;
@@ -53,22 +53,22 @@ std::string Book::author() const {
 }
 
 bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre){
-    BooktoBorrow->setBorrowedBy(Membre->ReturnName());
+    BooktoBorrow->AddBorrowedBy(Membre);
     BooktoBorrow->status = Bookstatus::Borrowed;
     return true;
 }
 
 bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
     if (BooktoBorrow->status != Bookstatus::Available){
-        cout << "the book " << BooktoBorrow->title() << "is already borrowed by " << BooktoBorrow->BorrowedBy() << endl;
-        //add texte que livre occupé, (personne qui l'a avec borowed by) 
+        cout << "the book " << BooktoBorrow->title() << "is already borrowed by " << endl;
+        BooktoBorrow->BorrowedBy();
         return false;
     }
     if(Membre->CanBorrow() == false){
         cout << "Member cannot borrow more books." << endl;
         return false;
     }
-    if (BooktoBorrow->SpecialTest(BooktoBorrow) == false){
+    if (BooktoBorrow->SpecialTest(BooktoBorrow, Membre) == false){
         return false;
     }
     Book* Copy = BooktoBorrow->Clone();
@@ -92,13 +92,14 @@ void Book::setStatus(Bookstatus newStatus) {
 }
 
 void Book::AddBorrowedBy(Member* newBorrower) {
-    borrowedBy_.push_back(newBorrower->borrowedBy_);
+    borrowedBy_.push_back(newBorrower->ReturnName());
 }
 
 void Book::DeleteBorrowedBy(Member* oldBorrower) {
-    for (int i=0; Book.borrowedBy_[i]== oldBorrower->name_; i++) {
-        if (it != borrowedBy_.end()) {
-            borrowedBy_.erase(it);
+    for (int i=0; i<borrowedBy_.size(); i++) {
+        if (borrowedBy_[i] == oldBorrower->ReturnName()) {
+            borrowedBy_.erase(borrowedBy_.begin() + i);
+            break;
         }
     }
 }
@@ -126,7 +127,7 @@ int EBook::size() const{
 }
 
 bool EBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
-    setBorrowedBy(Membre->ReturnName());
+    AddBorrowedBy(Membre);
     return true;
 }
 

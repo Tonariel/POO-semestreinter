@@ -32,7 +32,7 @@ public:
     void Destroy_Clone(Book *Copy);
     Book(const Book& other);
     Bookstatus Status() const;
-    std::string BorrowedBy() const;
+    void BorrowedBy() const;
     std::string title() const;
     std::string author() const;
     virtual bool Book::SpecialTest (Book* BooktoBorrow, Member* Membre);
@@ -40,7 +40,7 @@ public:
     static bool ReturnBook (Member* Membre, Book*BooktoReturn);
     void setStatus(Bookstatus newStatus);
     void AddBorrowedBy(Member* newBorrower);
-    void DeleteBorrowedBy(const std::vector<std::string>& oldBorrower);
+    void DeleteBorrowedBy(Member* oldBorrower);
     static int totalBooks();
 };
 
