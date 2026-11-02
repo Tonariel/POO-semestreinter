@@ -38,7 +38,7 @@ Bookstatus Book::Status() const {
 }
 
 void Book::BorrowedBy() const {
-    for (int i=0; i<borrowedBy_.size(); i++) {
+    for (size_t i=0; i<borrowedBy_.size(); ++i) {
         cout << borrowedBy_[i] << endl;
     }
     cout << "nobody" << endl;
@@ -105,7 +105,7 @@ void Book::AddBorrowedBy(Member* newBorrower) {
 }
 
 void Book::DeleteBorrowedBy(Member* oldBorrower) {
-    for (int i=0; i<borrowedBy_.size(); i++) {
+    for (size_t i=0; i<borrowedBy_.size(); ++i) {
         if (borrowedBy_[i] == oldBorrower->ReturnName()) {
             borrowedBy_.erase(borrowedBy_.begin() + i);
             break;
@@ -135,13 +135,15 @@ int EBook::size() const{
     return fileSize_;
 }
 
-bool EBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
+bool EBook::SpecialTest(Book*, Member* Membre){
     AddBorrowedBy(Membre);
+    setStatus(Bookstatus::Borrowed);
     return true;
 }
 
-bool EBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+bool EBook::DeleteSpecialTest(Book*, Member* Membre){
     DeleteBorrowedBy(Membre);
+    setStatus(Bookstatus::Available);
     return true;
 }
 
@@ -167,7 +169,7 @@ Bookstate PhysicalBook::State() const{
     return state_;
 }
 
-bool PhysicalBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
+bool PhysicalBook::SpecialTest(Book*, Member* Membre){
     if (Status()== Bookstatus::UnAvailable){
         return false;
     }
@@ -180,7 +182,7 @@ bool PhysicalBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
     return true;
 }
 
-bool PhysicalBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+bool PhysicalBook::DeleteSpecialTest(Book*, Member* Membre){
     DeleteBorrowedBy(Membre);
     setStatus(Bookstatus::Available);
     return true;
@@ -209,7 +211,7 @@ string AudioBook::Langage() const{
     return Langage_;
 }
 
-bool AudioBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
+bool AudioBook::SpecialTest(Book*, Member* Membre){
     if (Status() == Bookstatus::Borrowed){
         return false;
     }
@@ -218,12 +220,14 @@ bool AudioBook::SpecialTest(Book* BooktoBorrow, Member* Membre){
         AddBorrowedBy(Membre);
         return true;
     }
-    if (BorrowedBy_Size == 0){
+    if (BorrowedBy_Size() == 0){
         AddBorrowedBy(Membre);
+        return true;
     }
+    return false;
 }
 
-bool AudioBook::DeleteSpecialTest(Book* BooktoReturn, Member* Membre){
+bool AudioBook::DeleteSpecialTest(Book*, Member* Membre){
     if (Status() == Bookstatus::Borrowed){
         setStatus(Bookstatus::Available);
         DeleteBorrowedBy(Membre);
