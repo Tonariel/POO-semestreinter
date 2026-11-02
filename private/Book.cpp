@@ -61,9 +61,7 @@ bool Book::DeleteSpecialTest (Book* BooktoReturn, Member* Membre){
 }
 
 bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
-    if (BooktoBorrow->status != Bookstatus::Available){
-        cout << "the book " << BooktoBorrow->title() << "is already borrowed by " << endl;
-        BooktoBorrow->BorrowedBy();
+    if (Membre == nullptr || BooktoBorrow == nullptr) {
         return false;
     }
     if(Membre->CanBorrow() == false){
@@ -79,13 +77,17 @@ bool Book::BorrowBook (Member* Membre, Book* BooktoBorrow){
 }
 
 bool Book::ReturnBook (Member* Membre, Book* BooktoReturn){
-        Book* Copy = Membre->GetReleasedBook(BooktoReturn->title_, BooktoReturn->author_);
-        if (Copy == nullptr){
-            return false;
-        }
-        delete Copy;
-        BooktoReturn->DeleteSpecialTest(BooktoReturn, Membre);
-        return true;
+    if (Membre == nullptr || BooktoReturn == nullptr) {
+        return false;
+    }
+
+    Book* Copy = Membre->GetReleasedBook(BooktoReturn->title_, BooktoReturn->author_);
+    if (Copy == nullptr) {
+        return false;
+    }
+
+    delete Copy;
+    return BooktoReturn->DeleteSpecialTest(BooktoReturn, Membre);
 }
 
 void Book::setStatus(Bookstatus newStatus) {
@@ -135,7 +137,7 @@ int EBook::size() const{
 
 bool EBook::SpecialTest(Book*, Member* Membre){
     AddBorrowedBy(Membre);
-    setStatus(Bookstatus::Borrowed);
+    setStatus(Bookstatus::Available);
     return true;
 }
 
@@ -185,7 +187,8 @@ Bookstate PhysicalBook::State() const{
 }
 
 bool PhysicalBook::SpecialTest(Book*, Member* Membre){
-    if (Status()== Bookstatus::UnAvailable){
+    if (Status() == Bookstatus::Borrowed || Status() == Bookstatus::UnAvailable){
+        cout << "the book is already borrowed" << endl;
         return false;
     }
     if (State() == Bookstate::Damaged){
@@ -233,29 +236,25 @@ string AudioBook::Langage() const{
 }
 
 bool AudioBook::SpecialTest(Book*, Member* Membre){
-    if (Status() == Bookstatus::Borrowed){
+    constexpr int maxSimultaneousListeners = 2;
+    if (BorrowedBy_Size() >= maxSimultaneousListeners){
+        cout << "the audiobook has reached its listening limit" << endl;
         return false;
     }
-    if (BorrowedBy_Size() == 1){
+
+    AddBorrowedBy(Membre);
+    if (BorrowedBy_Size() == maxSimultaneousListeners){
         setStatus(Bookstatus::Borrowed);
-        AddBorrowedBy(Membre);
-        return true;
+    } else {
+        setStatus(Bookstatus::Available);
     }
-    if (BorrowedBy_Size() == 0){
-        AddBorrowedBy(Membre);
-        return true;
-    }
-    return false;
+    return true;
 }
 
 bool AudioBook::DeleteSpecialTest(Book*, Member* Membre){
-    if (Status() == Bookstatus::Borrowed){
-        setStatus(Bookstatus::Available);
-        DeleteBorrowedBy(Membre);
-        return true;
-    }
-    else{
-        DeleteBorrowedBy(Membre);
-        return true;
-    }
+    DeleteBorrowedBy(Membre);
+    setStatus(BorrowedBy_Size() >= 2
+                  ? Bookstatus::Borrowed
+                  : Bookstatus::Available);
+    return true;
 }
