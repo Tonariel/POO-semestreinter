@@ -21,14 +21,6 @@ Book::~Book() {
     cout << "- Destruct " << title_ << " (count=" << totalBooks_ << ")" << endl;
 }
 
-void Book::Display() const {
-    cout << "Book :" << title_;
-}
-
-Book* Book::Clone ()const {
-    return new Book(*this);
-}
-
 void Book::Destroy_Clone (Book *Copy){
     delete Copy;
 }
@@ -127,6 +119,12 @@ EBook* EBook::Clone()const{
     return new EBook(*this);
 }
 
+void EBook::Display() const {
+    cout << "[Numerique] " << title() << " par " << author()
+         << " | " << fileSize_ << " Mo"
+         << " | " << downloadUrl_;
+}
+
 string EBook::Url() const{
     return downloadUrl_;
 }
@@ -153,6 +151,23 @@ PhysicalBook::PhysicalBook(const PhysicalBook &other)
 
 PhysicalBook *PhysicalBook::Clone()const{
     return new PhysicalBook(*this);
+}
+
+void PhysicalBook::Display() const {
+    cout << "[Papier] " << title() << " par " << author()
+         << " | rayon " << Localisation_ << " | ";
+
+    switch (state_) {
+        case Bookstate::New:
+            cout << "neuf";
+            break;
+        case Bookstate::Good:
+            cout << "bon etat";
+            break;
+        case Bookstate::Damaged:
+            cout << "endommage";
+            break;
+    }
 }
 
 string PhysicalBook::Localisation() const{
@@ -195,6 +210,12 @@ AudioBook::AudioBook(const AudioBook &other)
 
 AudioBook* AudioBook::Clone()const{
     return new AudioBook(*this);
+}
+
+void AudioBook::Display() const {
+    cout << "[Audio] " << title() << " par " << author()
+         << " | lu par " << Narator_
+         << " | " << Duration_ << " min (" << Langage_ << ")";
 }
 
 int AudioBook::Duration() const{
