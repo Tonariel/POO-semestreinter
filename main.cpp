@@ -7,8 +7,9 @@
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
 
+// ==========================================
 // OUTIL DE VALIDATION
-//SALUUTUTTTTTT
+// ==========================================
 
 int testsReussis = 0;
 int testsEchoues = 0;
@@ -241,6 +242,43 @@ int main()
         );
 
         bibliotheque.DisplayCatalog();
+        DisplayObject(*b1);
+
+        // ==================================
+        // TEST 5B : LIVRE PAPIER ENDOMMAGE
+        // ==================================
+
+        std::cout << "\n=== TEST 5B : PAPIER ENDOMMAGE ===\n";
+
+        {
+            PhysicalBook livreEndommage(
+                "Livre endommage",
+                "Auteur G",
+                "Rayon C1",
+                Bookstate::Damaged
+            );
+            const std::size_t empruntsAvant =
+                etudiant->GetBorrowedCount();
+
+            DisplayObject(livreEndommage);
+            Verifier(livreEndommage.Status() == Bookstatus::Available,
+                     "Livre endommage disponible avant tentative");
+
+            bool refusLivreEndommage =
+                Book::BorrowBook(etudiant, &livreEndommage);
+
+            Verifier(!refusLivreEndommage,
+                     "Emprunt d'un livre endommage refuse");
+            Verifier(livreEndommage.Status() == Bookstatus::UnAvailable,
+                     "Livre endommage reste indisponible apres refus");
+            Verifier(etudiant->GetBorrowedCount() == empruntsAvant,
+                     "Aucun emprunt ajoute apres refus du livre endommage");
+            Verifier(!Book::ReturnBook(etudiant, &livreEndommage),
+                     "Retour d'un livre jamais emprunte refuse");
+        }
+
+        Verifier(Book::totalBooks() == 6,
+                 "Livre endommage temporaire detruit");
 
         // ==================================
         // TEST 6 : CLONAGE POLYMORPHE
@@ -250,7 +288,7 @@ int main()
 
         {
             std::unique_ptr<Book> copie(b3->Clone());
-
+Pas démontré : les tests du main n’empruntent ni ne rendent de livre audio. Ils ne testent pas non plus le refus d’un livre papier déjà emprunté ou endommagé.
             Verifier(copie != nullptr,
                      "Clone d'un livre audio cree");
 
@@ -316,13 +354,16 @@ int main()
         // L'etudiant a atteint sa limite.
         // On utilise l'enseignant pour isoler
         // la verification de disponibilite.
-        bool refusOccupe = Book::BorrowBook(enseignant, b1);
+        bool refusOccupe = Book::BorrowBook(enseignant, b2);
 
         Verifier(!refusOccupe,
-                 "Livre deja emprunte refuse");
+                 "Livre papier deja emprunte refuse");
 
         Verifier(enseignant->GetBorrowedCount() == 0,
-                 "Aucune copie ajoutee apres refus");
+                 "Aucune copie ajoutee a l'enseignant apres refus");
+
+        Verifier(b2->Status() == Bookstatus::Borrowed,
+                 "Livre papier reste emprunte apres refus");
 
         // ==================================
         // TEST 9 : RETOUR ETUDIANT
@@ -408,6 +449,76 @@ int main()
             b5->Status() == Bookstatus::Available,
             "Livres rendus disponibles"
         );
+
+        // ==================================
+        // TEST 11B : EMPRUNTS AUDIO SIMULTANES
+        // ==================================
+
+        std::cout << "\n=== TEST 11B : LIVRE AUDIO ===\n";
+
+        {
+            TeacherMember troisiemeAuditeur(
+                "Alex", "Roy", "P002", "Litterature"
+            );
+            const std::size_t empruntsEtudiantAvant =
+                etudiant->GetBorrowedCount();
+            const std::size_t empruntsEnseignantAvant =
+                enseignant->GetBorrowedCount();
+
+            DisplayObject(*b3);
+            Verifier(b3->Status() == Bookstatus::Available,
+                "Audio disponible avant les ecoutes");
+
+            bool ecouteEtudiant = Book::BorrowBook(etudiant, b3);
+            bool ecouteEnseignant = Book::BorrowBook(enseignant, b3);
+
+            Verifier(ecouteEtudiant && ecouteEnseignant,
+                "Deux ecoutes simultanees autorisees");
+            Verifier(b3->Status() == Bookstatus::Borrowed,
+                "Audio marque emprunte a la limite de deux ecoutes");
+
+            bool refusTroisiemeEcoute =
+                Book::BorrowBook(&troisiemeAuditeur, b3);
+
+            Verifier(!refusTroisiemeEcoute,
+                "Troisieme ecoute simultanee refusee");
+            Verifier(troisiemeAuditeur.GetBorrowedCount() == 0,
+                "Aucun emprunt ajoute apres refus audio");
+            Verifier(b3->Status() == Bookstatus::Borrowed,
+                "Audio reste emprunte apres refus");
+
+            bool retourEcouteEtudiant = Book::ReturnBook(etudiant, b3);
+            Verifier(retourEcouteEtudiant,
+                "Retour de la premiere ecoute");
+            Verifier(b3->Status() == Bookstatus::Available,
+                "Une place audio liberee apres un retour");
+
+            bool nouvelleEcoute =
+                Book::BorrowBook(&troisiemeAuditeur, b3);
+            Verifier(nouvelleEcoute,
+                "Nouvelle ecoute autorisee apres liberation");
+            Verifier(b3->Status() == Bookstatus::Borrowed,
+                "Audio de nouveau a sa limite de deux ecoutes");
+
+            bool retourEcouteEnseignant = Book::ReturnBook(enseignant, b3);
+            bool retourEcouteTroisieme =
+                Book::ReturnBook(&troisiemeAuditeur, b3);
+
+            Verifier(retourEcouteEnseignant && retourEcouteTroisieme,
+                "Retours des deux ecoutes restantes");
+            Verifier(b3->Status() == Bookstatus::Available,
+                "Audio disponible apres toutes les ecoutes");
+            Verifier(!Book::ReturnBook(&troisiemeAuditeur, b3),
+                "Retour audio sans emprunt en cours refuse");
+
+            Verifier(etudiant->GetBorrowedCount() == empruntsEtudiantAvant,
+                "Emprunts etudiant audio equilibres");
+            Verifier(enseignant->GetBorrowedCount() == empruntsEnseignantAvant,
+                "Emprunts enseignant audio equilibres");
+        }
+
+        Verifier(Book::totalBooks() == 6,
+            "Copies audio liberees apres les retours");
 
         bibliotheque.DisplayCatalog();
 
