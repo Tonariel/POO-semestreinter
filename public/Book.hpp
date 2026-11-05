@@ -17,7 +17,7 @@ enum class Bookstate{
     Damaged
 };
 
-class Book {
+class Book : public IDisplayable{
 private:
     std::string title_;
     std::string author_;
@@ -28,7 +28,7 @@ private:
 public:
     Book(std::string title, std::string author);
     virtual ~Book();
-    virtual void Display() const = 0;
+    virtual void GetInfo() const override = 0;
     virtual Book* Clone() const = 0;
     void Destroy_Clone(Book *Copy);
     Book(const Book& other);
@@ -58,7 +58,7 @@ public:
     EBook(std::string title, std::string author, std::string url, int size);
     EBook(const EBook &other);
     EBook* Clone()const override;
-    void Display() const override;
+    void GetInfo() const override;
     std::string Url() const;
     int size() const;
     bool SpecialTest(Book* BooktoBorrow, Member* Membre) override;
@@ -75,7 +75,7 @@ public:
     PhysicalBook(std::string title, std::string author, std::string Localisation, Bookstate state);
     PhysicalBook(const PhysicalBook &other);
     PhysicalBook *Clone()const override;
-    void Display() const override;
+    void GetInfo() const override;
     std::string Localisation() const;
     void SetState(Bookstate Newstate);
     Bookstate State() const;
@@ -93,7 +93,7 @@ public:
     AudioBook(std::string title, std::string author, int Duration, std::string Narator, std::string Langage);
     AudioBook(const AudioBook&other);
     AudioBook* Clone ()const override;
-    void Display() const override;
+    void GetInfo() const override;
     int Duration() const;
     std::string Narator() const;
     std::string Langage() const;

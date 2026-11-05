@@ -121,7 +121,7 @@ EBook* EBook::Clone()const{
     return new EBook(*this);
 }
 
-void EBook::Display() const {
+void EBook::GetInfo() const {
     cout << "[Numerique] " << title() << " par " << author()
          << " | " << fileSize_ << " Mo"
          << " | " << downloadUrl_;
@@ -157,7 +157,7 @@ PhysicalBook *PhysicalBook::Clone()const{
     return new PhysicalBook(*this);
 }
 
-void PhysicalBook::Display() const {
+void PhysicalBook::GetInfo() const {
     cout << "[Papier] " << title() << " par " << author()
          << " | rayon " << Localisation_ << " | ";
 
@@ -217,7 +217,7 @@ AudioBook* AudioBook::Clone()const{
     return new AudioBook(*this);
 }
 
-void AudioBook::Display() const {
+void AudioBook::GetInfo() const {
     cout << "[Audio] " << title() << " par " << author()
          << " | lu par " << Narator_
          << " | " << Duration_ << " min (" << Langage_ << ")";
