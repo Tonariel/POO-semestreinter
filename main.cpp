@@ -269,6 +269,11 @@ int main()
 
             Verifier(!refusLivreEndommage,
                      "Emprunt d'un livre endommage refuse");
+            std::cout << "Statut apres refus : "
+                      << (livreEndommage.Status() == Bookstatus::UnAvailable
+                              ? "Indisponible"
+                              : "autre")
+                      << '\n';
             Verifier(livreEndommage.Status() == Bookstatus::UnAvailable,
                      "Livre endommage reste indisponible apres refus");
             Verifier(etudiant->GetBorrowedCount() == empruntsAvant,
