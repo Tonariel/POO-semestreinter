@@ -310,6 +310,38 @@ int main()
                  "Clone detruit automatiquement");
 
         // ==================================
+        // TEST 6B : LICENCE NUMERIQUE ILLIMITEE
+        // ==================================
+
+        std::cout << "\n=== TEST 6B : NUMERIQUE ILLIMITE ===\n";
+
+        bool empruntNumeriqueEtudiant = Book::BorrowBook(etudiant, b1);
+        bool empruntNumeriqueEnseignant = Book::BorrowBook(enseignant, b1);
+
+        Verifier(empruntNumeriqueEtudiant && empruntNumeriqueEnseignant,
+                 "Deux membres empruntent simultanement le meme numerique");
+        Verifier(b1->Status() == Bookstatus::Available,
+                 "Le numerique reste disponible pendant les emprunts");
+        Verifier(etudiant->GetBorrowedCount() == 1 &&
+                 enseignant->GetBorrowedCount() == 1,
+                 "Chaque membre possede sa copie numerique");
+        Verifier(Book::totalBooks() == 8,
+                 "Deux copies numeriques creees");
+
+        bool retourNumeriqueEtudiant = Book::ReturnBook(etudiant, b1);
+        bool retourNumeriqueEnseignant = Book::ReturnBook(enseignant, b1);
+
+        Verifier(retourNumeriqueEtudiant && retourNumeriqueEnseignant,
+                 "Les deux copies numeriques sont rendues");
+        Verifier(etudiant->GetBorrowedCount() == 0 &&
+                 enseignant->GetBorrowedCount() == 0,
+                 "Aucun emprunt numerique ne reste aux membres");
+        Verifier(Book::totalBooks() == 6,
+                 "Copies numeriques liberees");
+        Verifier(!Book::ReturnBook(etudiant, b1),
+                 "Retour numerique sans emprunt en cours refuse");
+
+        // ==================================
         // TEST 7 : EMPRUNTS ETUDIANT
         // ==================================
 
