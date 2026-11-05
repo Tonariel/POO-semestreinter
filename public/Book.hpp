@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include "Members/Member.hpp"
 #include "Interfaces/IDisplayable.hpp"
 
