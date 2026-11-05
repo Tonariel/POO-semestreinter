@@ -7,9 +7,8 @@
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
 
-// ==========================================
 // OUTIL DE VALIDATION
-// ==========================================
+//SALUUTUTTTTTT
 
 int testsReussis = 0;
 int testsEchoues = 0;
