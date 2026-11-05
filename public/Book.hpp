@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "Members/Member.hpp"
+#include "Interfaces/IDisplayable.hpp"
 
 enum class Bookstatus{
     Borrowed,
