@@ -288,7 +288,6 @@ int main()
 
         {
             std::unique_ptr<Book> copie(b3->Clone());
-Pas démontré : les tests du main n’empruntent ni ne rendent de livre audio. Ils ne testent pas non plus le refus d’un livre papier déjà emprunté ou endommagé.
             Verifier(copie != nullptr,
                      "Clone d'un livre audio cree");
 

@@ -62,7 +62,7 @@ void Library::DisplayCatalog() const
         const Book* book = books_.Get(i);
 
         if (book != nullptr) {
-            book->Display();
+            book->GetInfo();
 
             std::cout << " | "
                       << (book->Status() == Bookstatus::Available
