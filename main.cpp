@@ -4,6 +4,10 @@
 #include <utility>
 
 #include "Library.hpp"
+#include "Books/AudioBook.hpp"
+#include "Books/Book.hpp"
+#include "Books/EBook.hpp"
+#include "Books/PhysicalBook.hpp"
 #include "Members/StudentMember.hpp"
 #include "Members/TeacherMember.hpp"
 

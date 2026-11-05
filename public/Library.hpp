@@ -1,7 +1,7 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
-#include "Book.hpp"
+#include "Books/Book.hpp"
 #include "Catalog.hpp"
 #include "Members/Member.hpp"
 

@@ -8,10 +8,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Recherche des fichiers sources dans private/
-# et dans tous ses sous-dossiers
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/private/*.cpp"
+set(SOURCES
+    private/Books/AudioBook.cpp
+    private/Books/Book.cpp
+    private/Books/EBook.cpp
+    private/Books/PhysicalBook.cpp
+    private/Library.cpp
+    private/Members/Member.cpp
+    private/Members/StudentMember.cpp
+    private/Members/TeacherMember.cpp
 )
 
 # Creation de l'executable
